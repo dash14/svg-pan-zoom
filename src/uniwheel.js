@@ -2,6 +2,8 @@
 // A unified cross browser mouse wheel event handler
 // https://github.com/teemualap/uniwheel
 
+var Utils = require("./utilities");
+
 module.exports = (function() {
   //Full details: https://developer.mozilla.org/en-US/docs/Web/Reference/Events/wheel
 
@@ -14,7 +16,7 @@ module.exports = (function() {
   var passiveFalseOption = { passive: false };
 
   // detect event model
-  if (globalThis.addEventListener) {
+  if (Utils.getGlobalThis().addEventListener) {
     _addEventListener = "addEventListener";
     _removeEventListener = "removeEventListener";
   } else {
