@@ -1,4 +1,5 @@
 var svgPanZoom = require("./svg-pan-zoom.js");
+var Utils = require("./utilities");
 
 // UMD module definition
 (function(_this) {
@@ -15,4 +16,4 @@ var svgPanZoom = require("./svg-pan-zoom.js");
     // Keep exporting globally as module.exports is available because of browserify
     _this.svgPanZoom = svgPanZoom;
   }
-})(globalThis);
+})(Utils.getGlobalThis());
