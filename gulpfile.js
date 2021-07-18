@@ -29,7 +29,7 @@ function isFixed(file) {
 function compile() {
   return browserify({ entries: "./src/stand-alone.js" })
     .bundle()
-    .on("error", function(err) {
+    .on("error", function (err) {
       console.log(err.toString());
       this.emit("end");
     })
@@ -75,7 +75,7 @@ function check() {
       .pipe(
         eslint({
           configFile: "./.eslintrc.json",
-          fix: true
+          fix: true,
         })
       )
       .pipe(eslint.format())

@@ -1,7 +1,7 @@
 var SvgUtils = require("./svg-utilities");
 
 module.exports = {
-  enable: function(instance) {
+  enable: function (instance) {
     // Select (and create if necessary) defs
     var defs = instance.svg.querySelector("defs");
     if (!defs) {
@@ -45,21 +45,21 @@ module.exports = {
     instance.controlIcons = zoomGroup;
   },
 
-  _createZoomIn: function(instance) {
+  _createZoomIn: function (instance) {
     var zoomIn = document.createElementNS(SvgUtils.svgNS, "g");
     zoomIn.setAttribute("id", "svg-pan-zoom-zoom-in");
     zoomIn.setAttribute("transform", "translate(30.5 5) scale(0.015)");
     zoomIn.setAttribute("class", "svg-pan-zoom-control");
     zoomIn.addEventListener(
       "click",
-      function() {
+      function () {
         instance.getPublicInstance().zoomIn();
       },
       false
     );
     zoomIn.addEventListener(
       "touchstart",
-      function() {
+      function () {
         instance.getPublicInstance().zoomIn();
       },
       false
@@ -84,7 +84,7 @@ module.exports = {
     return zoomIn;
   },
 
-  _createZoomReset: function(instance) {
+  _createZoomReset: function (instance) {
     // reset
     var resetPanZoomControl = document.createElementNS(SvgUtils.svgNS, "g");
     resetPanZoomControl.setAttribute("id", "svg-pan-zoom-reset-pan-zoom");
@@ -92,14 +92,14 @@ module.exports = {
     resetPanZoomControl.setAttribute("class", "svg-pan-zoom-control");
     resetPanZoomControl.addEventListener(
       "click",
-      function() {
+      function () {
         instance.getPublicInstance().reset();
       },
       false
     );
     resetPanZoomControl.addEventListener(
       "touchstart",
-      function() {
+      function () {
         instance.getPublicInstance().reset();
       },
       false
@@ -150,7 +150,7 @@ module.exports = {
     return resetPanZoomControl;
   },
 
-  _createZoomOut: function(instance) {
+  _createZoomOut: function (instance) {
     // zoom out
     var zoomOut = document.createElementNS(SvgUtils.svgNS, "g");
     zoomOut.setAttribute("id", "svg-pan-zoom-zoom-out");
@@ -158,14 +158,14 @@ module.exports = {
     zoomOut.setAttribute("class", "svg-pan-zoom-control");
     zoomOut.addEventListener(
       "click",
-      function() {
+      function () {
         instance.getPublicInstance().zoomOut();
       },
       false
     );
     zoomOut.addEventListener(
       "touchstart",
-      function() {
+      function () {
         instance.getPublicInstance().zoomOut();
       },
       false
@@ -190,10 +190,10 @@ module.exports = {
     return zoomOut;
   },
 
-  disable: function(instance) {
+  disable: function (instance) {
     if (instance.controlIcons) {
       instance.controlIcons.parentNode.removeChild(instance.controlIcons);
       instance.controlIcons = null;
     }
-  }
+  },
 };
