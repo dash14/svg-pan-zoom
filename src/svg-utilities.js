@@ -2,7 +2,10 @@ var Utils = require("./utilities"),
   _browser = "unknown";
 
 // http://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser
-if (/*@cc_on!@*/ false || !!document.documentMode) {
+if (
+  /*@cc_on!@*/ false ||
+  (typeof document != "undefined" && !!document.documentMode)
+) {
   // internet explorer
   _browser = "ie";
 }

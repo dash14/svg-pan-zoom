@@ -1,7 +1,7 @@
 var svgPanZoom = require("./svg-pan-zoom.js");
 
 // UMD module definition
-(function(window, document) {
+(function(_this) {
   // AMD
   if (typeof define === "function" && define.amd) {
     define("svg-pan-zoom", function() {
@@ -13,6 +13,6 @@ var svgPanZoom = require("./svg-pan-zoom.js");
 
     // Browser
     // Keep exporting globally as module.exports is available because of browserify
-    window.svgPanZoom = svgPanZoom;
+    _this.svgPanZoom = svgPanZoom;
   }
-})(window, document);
+})(globalThis);
