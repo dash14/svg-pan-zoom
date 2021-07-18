@@ -23,7 +23,7 @@ module.exports = {
    * @param  {SVGSVGElement} svg
    * @return {Object}     {width: 0, height: 0}
    */
-  getBoundingClientRectNormalized: function(svg) {
+  getBoundingClientRectNormalized: function (svg) {
     if (svg.clientWidth && svg.clientHeight) {
       return { width: svg.clientWidth, height: svg.clientHeight };
     } else if (!!svg.getBoundingClientRect()) {
@@ -39,7 +39,7 @@ module.exports = {
    * @param  {SVGSVGElement} svg
    * @return {SVGElement}     g (group) element
    */
-  getOrCreateViewport: function(svg, selector) {
+  getOrCreateViewport: function (svg, selector) {
     var viewport = null;
 
     if (Utils.isElement(selector)) {
@@ -52,7 +52,7 @@ module.exports = {
     if (!viewport) {
       var childNodes = Array.prototype.slice
         .call(svg.childNodes || svg.children)
-        .filter(function(el) {
+        .filter(function (el) {
           return el.nodeName !== "defs" && el.nodeName !== "#text";
         });
 
@@ -107,7 +107,7 @@ module.exports = {
    *
    * @param  {SVGSVGElement} svg
    */
-  setupSvgAttributes: function(svg) {
+  setupSvgAttributes: function (svg) {
     // Setting default attributes
     svg.setAttribute("xmlns", this.svgNS);
     svg.setAttributeNS(this.xmlnsNS, "xmlns:xlink", this.xlinkNS);
@@ -139,7 +139,7 @@ module.exports = {
    * also see svg-pan-zoom issue: https://github.com/ariutta/svg-pan-zoom/issues/62
    */
   refreshDefsGlobal: Utils.throttle(
-    function() {
+    function () {
       var allDefs = document.querySelectorAll("defs");
       var allDefsCount = allDefs.length;
       for (var i = 0; i < allDefsCount; i++) {
@@ -157,7 +157,7 @@ module.exports = {
    * @param {SVGMatrix} matrix  CTM
    * @param {SVGElement} defs
    */
-  setCTM: function(element, matrix, defs) {
+  setCTM: function (element, matrix, defs) {
     var that = this,
       s =
         "matrix(" +
@@ -192,7 +192,7 @@ module.exports = {
       // this refresh is intended for redisplaying the other SVGs on a page when panning a given SVG
       // it is also needed for the given SVG itself, on zoomEnd, if the SVG contains any markers that
       // are located under any other element(s).
-      window.setTimeout(function() {
+      window.setTimeout(function () {
         that.refreshDefsGlobal();
       }, that.internetExplorerRedisplayInterval);
     }
@@ -205,7 +205,7 @@ module.exports = {
    * @param  {SVGSVGElement} svg
    * @return {SVGPoint}     point
    */
-  getEventPoint: function(evt, svg) {
+  getEventPoint: function (evt, svg) {
     var point = svg.createSVGPoint();
 
     Utils.mouseAndTouchNormalize(evt, svg);
@@ -222,7 +222,7 @@ module.exports = {
    * @param  {SVGSVGElement} svg
    * @return {SVGPoint}
    */
-  getSvgCenterPoint: function(svg, width, height) {
+  getSvgCenterPoint: function (svg, width, height) {
     return this.createSVGPoint(svg, width / 2, height / 2);
   },
 
@@ -234,11 +234,11 @@ module.exports = {
    * @param  {Number} y
    * @return {SVGPoint}
    */
-  createSVGPoint: function(svg, x, y) {
+  createSVGPoint: function (svg, x, y) {
     var point = svg.createSVGPoint();
     point.x = x;
     point.y = y;
 
     return point;
-  }
+  },
 };

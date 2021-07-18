@@ -5,7 +5,7 @@ var svg,
   svgSelectorViewboxTransform = "#test-viewbox-transform",
   instance;
 
-var initSvgPanZoom = function(options, alternativeSelector) {
+var initSvgPanZoom = function (options, alternativeSelector) {
   if (options) {
     return svgPanZoom(alternativeSelector || svgSelector, options);
   } else {
@@ -21,7 +21,7 @@ var initSvgPanZoom = function(options, alternativeSelector) {
  * @param  {Float} error    Optional
  * @param  {String} message  Optional
  */
-var close = (QUnit.assert.close = function(number, expected, error, message) {
+var close = (QUnit.assert.close = function (number, expected, error, message) {
   if (error === void 0 || error === null) {
     error = 0.0001; // default error
   }
@@ -37,31 +37,31 @@ var close = (QUnit.assert.close = function(number, expected, error, message) {
 });
 
 module("Test API", {
-  setup: function() {},
-  teardown: function() {
+  setup: function () {},
+  teardown: function () {
     instance && instance.destroy && instance.destroy();
-  }
+  },
 });
 
 /**
  * Pan state (enabled, disabled)
  */
 
-test("by default pan should be enabled", function() {
+test("by default pan should be enabled", function () {
   expect(1);
   instance = initSvgPanZoom();
 
   equal(instance.isPanEnabled(), true);
 });
 
-test("disable pan via options", function() {
+test("disable pan via options", function () {
   expect(1);
   instance = initSvgPanZoom({ panEnabled: false });
 
   equal(instance.isPanEnabled(), false);
 });
 
-test("disable and enable pan via API", function() {
+test("disable and enable pan via API", function () {
   expect(2);
   instance = initSvgPanZoom();
 
@@ -76,21 +76,21 @@ test("disable and enable pan via API", function() {
  * Zoom state (enabled, disabled)
  */
 
-test("by default zoom should be enabled", function() {
+test("by default zoom should be enabled", function () {
   expect(1);
   instance = initSvgPanZoom();
 
   equal(instance.isZoomEnabled(), true);
 });
 
-test("disable zoom via options", function() {
+test("disable zoom via options", function () {
   expect(1);
   instance = initSvgPanZoom({ zoomEnabled: false });
 
   equal(instance.isZoomEnabled(), false);
 });
 
-test("disable and enable zoom via API", function() {
+test("disable and enable zoom via API", function () {
   expect(2);
   instance = initSvgPanZoom();
 
@@ -105,21 +105,21 @@ test("disable and enable zoom via API", function() {
  * Controls state (enabled, disabled)
  */
 
-test("by default controls are disabled", function() {
+test("by default controls are disabled", function () {
   expect(1);
   instance = initSvgPanZoom();
 
   equal(instance.isControlIconsEnabled(), false);
 });
 
-test("enable controls via opions", function() {
+test("enable controls via opions", function () {
   expect(1);
   instance = initSvgPanZoom({ controlIconsEnabled: true });
 
   equal(instance.isControlIconsEnabled(), true);
 });
 
-test("disable and enable controls via API", function() {
+test("disable and enable controls via API", function () {
   expect(2);
   instance = initSvgPanZoom();
 
@@ -134,21 +134,21 @@ test("disable and enable controls via API", function() {
  * Double click zoom state (enabled, disabled)
  */
 
-test("by default double click zoom is enabled", function() {
+test("by default double click zoom is enabled", function () {
   expect(1);
   instance = initSvgPanZoom();
 
   equal(instance.isDblClickZoomEnabled(), true);
 });
 
-test("disable double click zoom via options", function() {
+test("disable double click zoom via options", function () {
   expect(1);
   instance = initSvgPanZoom({ dblClickZoomEnabled: false });
 
   equal(instance.isDblClickZoomEnabled(), false);
 });
 
-test("disable and enable double click zoom via API", function() {
+test("disable and enable double click zoom via API", function () {
   expect(2);
   instance = initSvgPanZoom();
 
@@ -163,21 +163,21 @@ test("disable and enable double click zoom via API", function() {
  * Mouse wheel zoom state (enabled, disabled)
  */
 
-test("by default mouse wheel zoom is enabled", function() {
+test("by default mouse wheel zoom is enabled", function () {
   expect(1);
   instance = initSvgPanZoom();
 
   equal(instance.isMouseWheelZoomEnabled(), true);
 });
 
-test("disable mouse wheel zoom via options", function() {
+test("disable mouse wheel zoom via options", function () {
   expect(1);
   instance = initSvgPanZoom({ mouseWheelZoomEnabled: false });
 
   equal(instance.isMouseWheelZoomEnabled(), false);
 });
 
-test("disable and enable mouse wheel zoom via API", function() {
+test("disable and enable mouse wheel zoom via API", function () {
   expect(2);
   instance = initSvgPanZoom();
 
@@ -192,7 +192,7 @@ test("disable and enable mouse wheel zoom via API", function() {
  * Pan
  */
 
-test("pan", function() {
+test("pan", function () {
   expect(1);
   instance = initSvgPanZoom();
 
@@ -200,11 +200,11 @@ test("pan", function() {
 
   deepEqual(instance.getPan(), {
     x: 100,
-    y: 300
+    y: 300,
   });
 });
 
-test("pan through API should work even if pan is disabled", function() {
+test("pan through API should work even if pan is disabled", function () {
   expect(1);
   instance = initSvgPanZoom({ panEnabled: false });
 
@@ -212,11 +212,11 @@ test("pan through API should work even if pan is disabled", function() {
 
   deepEqual(instance.getPan(), {
     x: 100,
-    y: 300
+    y: 300,
   });
 });
 
-test("pan by", function() {
+test("pan by", function () {
   expect(1);
   instance = initSvgPanZoom();
 
@@ -226,7 +226,7 @@ test("pan by", function() {
 
   deepEqual(instance.getPan(), {
     x: initialPan.x + 100,
-    y: initialPan.y + 300
+    y: initialPan.y + 300,
   });
 });
 
@@ -234,13 +234,13 @@ test("pan by", function() {
  * Pan callbacks
  */
 
-test("before pan", function() {
+test("before pan", function () {
   expect(1);
   instance = initSvgPanZoom();
 
   var initialPan = instance.getPan();
 
-  instance.setBeforePan(function(point) {
+  instance.setBeforePan(function (point) {
     deepEqual(point, initialPan);
   });
 
@@ -253,62 +253,62 @@ test("before pan", function() {
   instance.pan({ x: 50, y: 150 });
 });
 
-test("don't trigger on pan if canceld by before pan", function() {
+test("don't trigger on pan if canceld by before pan", function () {
   expect(1);
   instance = initSvgPanZoom({
-    onPan: function() {
+    onPan: function () {
       QUnit.ok(true, "onUpdatedCTM got called");
-    }
+    },
   });
 
   instance.panBy({ x: 100, y: 300 });
 
-  instance.setBeforePan(function(oldPan, newPan) {
+  instance.setBeforePan(function (oldPan, newPan) {
     return false;
   });
 
   instance.panBy({ x: 100, y: 300 });
 });
 
-test("don't trigger on pan if canceld by before pan for each axis separately", function() {
+test("don't trigger on pan if canceld by before pan for each axis separately", function () {
   expect(1);
   instance = initSvgPanZoom({
-    onPan: function() {
+    onPan: function () {
       QUnit.ok(true, "onUpdatedCTM got called");
-    }
+    },
   });
 
   instance.panBy({ x: 100, y: 300 });
 
-  instance.setBeforePan(function(oldPan, newPan) {
+  instance.setBeforePan(function (oldPan, newPan) {
     return { x: false, y: false };
   });
 
   instance.panBy({ x: 100, y: 300 });
 });
 
-test("don't trigger on pan if canceld by before pan for each axis separately", function() {
+test("don't trigger on pan if canceld by before pan for each axis separately", function () {
   expect(1);
   instance = initSvgPanZoom({
-    onPan: function() {
+    onPan: function () {
       QUnit.ok(true, "onUpdatedCTM got called");
-    }
+    },
   });
 
   instance.panBy({ x: 100, y: 300 });
 
-  instance.setBeforePan(function(oldPan, newPan) {
+  instance.setBeforePan(function (oldPan, newPan) {
     return { x: false, y: false };
   });
 
   instance.panBy({ x: 100, y: 300 });
 });
 
-test("on pan", function() {
+test("on pan", function () {
   expect(1);
   instance = initSvgPanZoom();
 
-  instance.setOnPan(function(point) {
+  instance.setOnPan(function (point) {
     deepEqual(point, { x: 100, y: 300 });
   });
 
@@ -321,17 +321,17 @@ test("on pan", function() {
   instance.pan({ x: 50, y: 150 });
 });
 
-test("change only X axis when Y axis change is prevented with before pan", function() {
+test("change only X axis when Y axis change is prevented with before pan", function () {
   expect(2);
   instance = initSvgPanZoom();
   var initialPan = instance.getPan();
 
-  instance.setOnPan(function(newPan) {
+  instance.setOnPan(function (newPan) {
     notEqual(newPan.x, initialPan.x);
     equal(newPan.y, initialPan.y);
   });
 
-  instance.setBeforePan(function(oldPan, newPan) {
+  instance.setBeforePan(function (oldPan, newPan) {
     return { y: false };
   });
 
@@ -341,15 +341,15 @@ test("change only X axis when Y axis change is prevented with before pan", funct
   instance.setOnPan(null);
 });
 
-test("change pan values from before pan", function() {
+test("change pan values from before pan", function () {
   expect(1);
   instance = initSvgPanZoom();
 
-  instance.setOnPan(function(newPan) {
+  instance.setOnPan(function (newPan) {
     deepEqual(newPan, { x: 1, y: 2 });
   });
 
-  instance.setBeforePan(function(oldPan, newPan) {
+  instance.setBeforePan(function (oldPan, newPan) {
     return { x: 1, y: 2 };
   });
 
@@ -359,16 +359,16 @@ test("change pan values from before pan", function() {
   instance.setOnPan(null);
 });
 
-test("don't pan if before pan makes the pan unnecessary", function() {
+test("don't pan if before pan makes the pan unnecessary", function () {
   expect(0);
   instance = initSvgPanZoom();
   var initialPan = instance.getPan();
 
-  instance.setOnPan(function() {
+  instance.setOnPan(function () {
     QUnit.ok(true, "onUpdatedCTM got called");
   });
 
-  instance.setBeforePan(function(oldPan, newPan) {
+  instance.setBeforePan(function (oldPan, newPan) {
     return { x: false, y: initialPan.y };
   });
 
@@ -382,7 +382,7 @@ test("don't pan if before pan makes the pan unnecessary", function() {
  * Zoom
  */
 
-test("zoom", function() {
+test("zoom", function () {
   expect(1);
   instance = initSvgPanZoom();
 
@@ -391,7 +391,7 @@ test("zoom", function() {
   equal(instance.getZoom(), 3);
 });
 
-test("zoom by", function() {
+test("zoom by", function () {
   expect(1);
   instance = initSvgPanZoom();
 
@@ -402,7 +402,7 @@ test("zoom by", function() {
   equal(instance.getZoom(), initialZoom * 2);
 });
 
-test("zoom at point", function() {
+test("zoom at point", function () {
   expect(2);
   instance = initSvgPanZoom({ fit: false });
 
@@ -412,7 +412,7 @@ test("zoom at point", function() {
   deepEqual(instance.getPan(), { x: -300, y: -600 });
 });
 
-test("zoom at point by", function() {
+test("zoom at point by", function () {
   expect(2);
   instance = initSvgPanZoom({ fit: false });
 
@@ -422,7 +422,7 @@ test("zoom at point by", function() {
   deepEqual(instance.getPan(), { x: -300, y: -600 });
 });
 
-test("zoom at point by (with SVG point)", function() {
+test("zoom at point by (with SVG point)", function () {
   expect(2);
   instance = initSvgPanZoom({ fit: false });
 
@@ -436,7 +436,7 @@ test("zoom at point by (with SVG point)", function() {
   deepEqual(instance.getPan(), { x: -300, y: -600 });
 });
 
-test("zoom in", function() {
+test("zoom in", function () {
   expect(3);
   instance = initSvgPanZoom({ fit: false });
 
@@ -447,7 +447,7 @@ test("zoom in", function() {
   close(instance.getPan().y, -290);
 });
 
-test("zoom out", function() {
+test("zoom out", function () {
   expect(3);
   instance = initSvgPanZoom({ fit: false });
 
@@ -462,7 +462,7 @@ test("zoom out", function() {
  * Zoom settings (min, max, sensitivity)
  */
 
-test("default min zoom", function() {
+test("default min zoom", function () {
   expect(1);
   // Do not use fit as it will set original zoom different from 1
   instance = initSvgPanZoom({ fit: false });
@@ -472,7 +472,7 @@ test("default min zoom", function() {
   equal(instance.getZoom(), 0.5);
 });
 
-test("min zoom", function() {
+test("min zoom", function () {
   expect(1);
   // Do not use fit as it will set original zoom different from 1
   instance = initSvgPanZoom({ fit: false, minZoom: 1 });
@@ -482,7 +482,7 @@ test("min zoom", function() {
   equal(instance.getZoom(), 1);
 });
 
-test("default max zoom", function() {
+test("default max zoom", function () {
   expect(1);
   // Do not use fit as it will set original zoom different from 1
   instance = initSvgPanZoom({ fit: false });
@@ -492,7 +492,7 @@ test("default max zoom", function() {
   equal(instance.getZoom(), 10);
 });
 
-test("max zoom", function() {
+test("max zoom", function () {
   expect(1);
   // Do not use fit as it will set original zoom different from 1
   instance = initSvgPanZoom({ fit: false, maxZoom: 20 });
@@ -502,7 +502,7 @@ test("max zoom", function() {
   equal(instance.getZoom(), 20);
 });
 
-test("test zoomScaleSensitivity using zoomIn and zoomOut", function() {
+test("test zoomScaleSensitivity using zoomIn and zoomOut", function () {
   expect(2);
   var sensitivity = 0.2;
 
@@ -539,13 +539,13 @@ test("test zoomScaleSensitivity using zoomIn and zoomOut", function() {
  * Zoom callbacks
  */
 
-test("before zoom", function() {
+test("before zoom", function () {
   expect(1);
   instance = initSvgPanZoom();
 
   var initialZoom = instance.getZoom();
 
-  instance.setBeforeZoom(function(scale) {
+  instance.setBeforeZoom(function (scale) {
     close(scale, initialZoom);
   });
 
@@ -558,11 +558,11 @@ test("before zoom", function() {
   instance.zoom(2.4);
 });
 
-test("on zoom", function() {
+test("on zoom", function () {
   expect(1);
   instance = initSvgPanZoom();
 
-  instance.setOnZoom(function(scale) {
+  instance.setOnZoom(function (scale) {
     close(scale, 2.3);
   });
 
@@ -579,7 +579,7 @@ test("on zoom", function() {
  * Reseting
  */
 
-test("reset zoom", function() {
+test("reset zoom", function () {
   expect(1);
   instance = initSvgPanZoom();
 
@@ -592,7 +592,7 @@ test("reset zoom", function() {
   close(instance.getZoom(), initialZoom);
 });
 
-test("reset pan", function() {
+test("reset pan", function () {
   expect(1);
   instance = initSvgPanZoom();
 
@@ -605,7 +605,7 @@ test("reset pan", function() {
   deepEqual(instance.getPan(), initialPan);
 });
 
-test("reset (zoom and pan)", function() {
+test("reset (zoom and pan)", function () {
   expect(2);
   instance = initSvgPanZoom();
 
@@ -631,7 +631,7 @@ test("reset (zoom and pan)", function() {
  *
  * If no viewBox attribute then initial zoom is always 1
  */
-test("fit when initialized with fit: true", function() {
+test("fit when initialized with fit: true", function () {
   expect(1);
   instance = initSvgPanZoom();
 
@@ -645,7 +645,7 @@ test("fit when initialized with fit: true", function() {
  * viewport zise 800x800
  * zoom = Math.min(700/800, 300/800) = 0.375
  */
-test("fit when initialized with fit: false", function() {
+test("fit when initialized with fit: false", function () {
   expect(1);
   instance = initSvgPanZoom({ fit: false, minZoom: 0.1 });
 
@@ -662,7 +662,7 @@ test("fit when initialized with fit: false", function() {
  * panX = (700 - 300)/2 = 200
  * panY = (300 - 300)/2 = 0
  */
-test("center when zoom is 1", function() {
+test("center when zoom is 1", function () {
   expect(1);
   instance = initSvgPanZoom();
 
@@ -679,7 +679,7 @@ test("center when zoom is 1", function() {
  * panX = (700 - 150)/2 = 275
  * panY = (300 - 150)/2 = 75
  */
-test("center when zoom is 0.5", function() {
+test("center when zoom is 0.5", function () {
   expect(1);
   instance = initSvgPanZoom();
 
@@ -699,17 +699,17 @@ test("center when zoom is 0.5", function() {
  * On updated CTM callback
  */
 
-asyncTest("onUpdatedCTM is called", function() {
+asyncTest("onUpdatedCTM is called", function () {
   // onUpdatedCTM will get called once on init and once after panBy
   expect(2);
 
   instance = initSvgPanZoom();
-  instance.setOnUpdatedCTM(function() {
+  instance.setOnUpdatedCTM(function () {
     QUnit.ok(true, "onUpdatedCTM got called");
   });
   instance.panBy({ x: 100, y: 300 });
 
-  setTimeout(function() {
+  setTimeout(function () {
     start();
   }, 100);
 });
@@ -718,7 +718,7 @@ asyncTest("onUpdatedCTM is called", function() {
  * Destroy
  */
 
-test("after destroy calling svgPanZoom again should return a new instance", function() {
+test("after destroy calling svgPanZoom again should return a new instance", function () {
   expect(1);
   instance = initSvgPanZoom();
 

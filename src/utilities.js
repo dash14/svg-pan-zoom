@@ -4,7 +4,7 @@ module.exports = {
    *
    * @return {Object}        global this object
    */
-  getGlobalThis: function() {
+  getGlobalThis: function () {
     if (typeof globalThis !== "undefined") return globalThis;
     if (typeof self !== "undefined") return self;
     if (typeof window !== "undefined") return window;
@@ -21,7 +21,7 @@ module.exports = {
    * @param  {Object} source object to take properties from
    * @return {Object}        extended object
    */
-  extend: function(target, source) {
+  extend: function (target, source) {
     target = target || {};
     for (var prop in source) {
       // Go recursively
@@ -40,7 +40,7 @@ module.exports = {
    * @param  {Object}  o HTML element or String
    * @return {Boolean}   returns true if object is a DOM element
    */
-  isElement: function(o) {
+  isElement: function (o) {
     return (
       o instanceof HTMLElement ||
       o instanceof SVGElement ||
@@ -59,7 +59,7 @@ module.exports = {
    * @param  {Object}  o Object
    * @return {Boolean}   returns true if object is an Object
    */
-  isObject: function(o) {
+  isObject: function (o) {
     return Object.prototype.toString.call(o) === "[object Object]";
   },
 
@@ -69,7 +69,7 @@ module.exports = {
    * @param  {Integer|Float}  n
    * @return {Boolean}   returns true if variable is Number
    */
-  isNumber: function(n) {
+  isNumber: function (n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
   },
 
@@ -79,7 +79,7 @@ module.exports = {
    * @param  {Object|String} elementOrSelector DOM Element or selector String
    * @return {Object|Null}                   SVG or null
    */
-  getSvg: function(elementOrSelector) {
+  getSvg: function (elementOrSelector) {
     var element, svg;
 
     if (!this.isElement(elementOrSelector)) {
@@ -136,8 +136,8 @@ module.exports = {
    * @param  {Object}   context Context
    * @return {Function}           Function with certain context
    */
-  proxy: function(fn, context) {
-    return function() {
+  proxy: function (fn, context) {
+    return function () {
       return fn.apply(context, arguments);
     };
   },
@@ -150,7 +150,7 @@ module.exports = {
    * @param  {Object} o Any object
    * @return {String}   Object type
    */
-  getType: function(o) {
+  getType: function (o) {
     return Object.prototype.toString
       .apply(o)
       .replace(/^\[object\s/, "")
@@ -163,7 +163,7 @@ module.exports = {
    * @param  {Event} evt
    * @param  {SVGSVGElement} svg
    */
-  mouseAndTouchNormalize: function(evt, svg) {
+  mouseAndTouchNormalize: function (evt, svg) {
     // If no clientX then fallback
     if (evt.clientX === void 0 || evt.clientX === null) {
       // Fallback
@@ -200,7 +200,7 @@ module.exports = {
    * @param  {Event}  prevEvt Previous Event
    * @return {Boolean}
    */
-  isDblClick: function(evt, prevEvt) {
+  isDblClick: function (evt, prevEvt) {
     // Double click detected by browser
     if (evt.detail === 2) {
       return true;
@@ -227,7 +227,7 @@ module.exports = {
    */
   now:
     Date.now ||
-    function() {
+    function () {
       return new Date().getTime();
     },
 
@@ -237,7 +237,7 @@ module.exports = {
   // as much as it can, without ever going more than once per `wait` duration;
   // but if you'd like to disable the execution on the leading edge, pass
   // `{leading: false}`. To disable execution on the trailing edge, ditto.
-  throttle: function(func, wait, options) {
+  throttle: function (func, wait, options) {
     var that = this;
     var context, args, result;
     var timeout = null;
@@ -245,7 +245,7 @@ module.exports = {
     if (!options) {
       options = {};
     }
-    var later = function() {
+    var later = function () {
       previous = options.leading === false ? 0 : that.now();
       timeout = null;
       result = func.apply(context, args);
@@ -253,7 +253,7 @@ module.exports = {
         context = args = null;
       }
     };
-    return function() {
+    return function () {
       var now = that.now();
       if (!previous && options.leading === false) {
         previous = now;
@@ -282,7 +282,7 @@ module.exports = {
    * @param  {Number|String} refreshRate
    * @return {Function}
    */
-  createRequestAnimationFrame: function(refreshRate) {
+  createRequestAnimationFrame: function (refreshRate) {
     var timeout = null;
 
     // Convert refreshRate to timeout
@@ -295,7 +295,7 @@ module.exports = {
     } else {
       return requestTimeout(timeout);
     }
-  }
+  },
 };
 
 /**
@@ -305,7 +305,7 @@ module.exports = {
  * @return {Function}
  */
 function requestTimeout(timeout) {
-  return function(callback) {
+  return function (callback) {
     window.setTimeout(callback, timeout);
   };
 }
