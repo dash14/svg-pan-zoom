@@ -10,7 +10,8 @@ module.exports = (function() {
     _removeEventListener,
     support,
     fns = [];
-  var passiveOption = { passive: true };
+  var passiveTrueOption = { passive: true };
+  var passiveFalseOption = { passive: false };
 
   // detect event model
   if (globalThis.addEventListener) {
@@ -101,7 +102,7 @@ module.exports = (function() {
     elem[_addEventListener](
       prefix + eventName,
       cb,
-      isPassiveListener ? passiveOption : false
+      isPassiveListener ? passiveTrueOption : passiveFalseOption
     );
   }
 
@@ -117,7 +118,7 @@ module.exports = (function() {
     elem[_removeEventListener](
       prefix + eventName,
       cb,
-      isPassiveListener ? passiveOption : false
+      isPassiveListener ? passiveTrueOption : passiveFalseOption
     );
 
     removeCallback(elem);
