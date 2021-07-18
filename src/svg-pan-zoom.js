@@ -32,7 +32,8 @@ var optionsDefaults = {
   onUpdatedCTM: null
 };
 
-var passiveListenerOption = { passive: true };
+var passiveListenerTrueOption = { passive: true };
+var passiveListenerFalseOption = { passive: false };
 
 SvgPanZoom.prototype.init = function(svg, options) {
   var that = this;
@@ -188,7 +189,9 @@ SvgPanZoom.prototype.setupHandlers = function() {
     (this.options.eventsListenerElement || this.svg).addEventListener(
       event,
       this.eventListeners[event],
-      !this.options.preventMouseEventsDefault ? passiveListenerOption : false
+      !this.options.preventMouseEventsDefault
+        ? passiveListenerTrueOption
+        : passiveListenerFalseOption
     );
   }
 
@@ -687,7 +690,9 @@ SvgPanZoom.prototype.destroy = function() {
     (this.options.eventsListenerElement || this.svg).removeEventListener(
       event,
       this.eventListeners[event],
-      !this.options.preventMouseEventsDefault ? passiveListenerOption : false
+      !this.options.preventMouseEventsDefault
+        ? passiveListenerTrueOption
+        : passiveListenerFalseOption
     );
   }
 
