@@ -68,7 +68,8 @@ function check() {
         "!./dist/**/*.js",
         "!./demo/**/*.js",
         "!./tests/assets/**/*.js",
-        "!./src/uniwheel.js" // Ignore uniwheel
+        "!./src/uniwheel.js", // Ignore uniwheel
+        "!./node_modules/**",
       ])
       // NOTE: this runs prettier via eslint-plugin-prettier
       .pipe(
