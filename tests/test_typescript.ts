@@ -1,3 +1,5 @@
+import svgPanZoom, * as SvgPanZoom from "../dist/svg-pan-zoom";
+
 var svgPanZoomOptions : SvgPanZoom.Options = {
   panEnabled: true // enable or disable panning (default enabled)
   , controlIconsEnabled: false // insert icons to give user an option in addition to mouse events to control pan/zoom (default disabled)

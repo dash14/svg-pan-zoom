@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "module": "UMD",
+    "moduleResolution": "node",
     "target": "es5",
     "diagnostics": true,
     "noEmit": true,
