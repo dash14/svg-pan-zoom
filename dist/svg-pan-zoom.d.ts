@@ -53,6 +53,11 @@ export interface Options {
   onUpdatedCTM?: (newCTM: SVGMatrix) => void;
   customEventsHandler?: CustomEventHandler; // (default null)
   eventsListenerElement?: SVGElement; // (default null)
+  /**
+   * use pointer* events instead of mouse* and touch* events (default disabled)
+   * @type {boolean}
+   */
+  usePointerEvents?: boolean;
 }
 
 export interface CustomEventHandler {
