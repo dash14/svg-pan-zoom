@@ -1,4 +1,4 @@
-// svg-pan-zoom v3.6.2
+// svg-pan-zoom v3.6.3
 // https://github.com/ariutta/svg-pan-zoom
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 var SvgUtils = require("./svg-utilities");
@@ -623,9 +623,11 @@ var optionsDefaults = {
   customEventsHandler: null,
   eventsListenerElement: null,
   onUpdatedCTM: null,
+  usePointerEvents: true, // use pointer* events instead of mouse* and touch* events
 };
 
-var passiveListenerOption = { passive: true };
+var passiveListenerTrueOption = { passive: true };
+var passiveListenerFalseOption = { passive: false };
 
 SvgPanZoom.prototype.init = function (svg, options) {
   var that = this;
@@ -702,56 +704,112 @@ SvgPanZoom.prototype.init = function (svg, options) {
 
   // Init events handlers
   this.lastMouseWheelEventTime = Date.now();
-  this.setupHandlers();
+  this.setupHandlers(this.options.usePointerEvents);
 };
 
 /**
  * Register event handlers
  */
-SvgPanZoom.prototype.setupHandlers = function () {
+SvgPanZoom.prototype.setupHandlers = function (usePointerEvents) {
   var that = this,
     prevEvt = null; // use for touchstart event to detect double tap
 
-  this.eventListeners = {
-    // Mouse down group
-    mousedown: function (evt) {
-      var result = that.handleMouseDown(evt, prevEvt);
-      prevEvt = evt;
-      return result;
-    },
-    touchstart: function (evt) {
-      var result = that.handleMouseDown(evt, prevEvt);
-      prevEvt = evt;
-      return result;
-    },
+  if (usePointerEvents) {
+    this.eventListeners = {
+      // Pointer down
+      pointerdown: function (evt) {
+        var result = that.handleMouseDown(evt, prevEvt);
+        prevEvt = evt;
+        return result;
+      },
+      mousedown: function (evt) {
+        that.ignoreEvent(evt);
+      },
+      touchstart: function (evt) {
+        that.ignoreEvent(evt);
+      },
 
-    // Mouse up group
-    mouseup: function (evt) {
-      return that.handleMouseUp(evt);
-    },
-    touchend: function (evt) {
-      return that.handleMouseUp(evt);
-    },
+      // Pointer up
+      pointerup: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+      mouseup: function (evt) {
+        that.ignoreEvent(evt);
+      },
+      touchend: function (evt) {
+        that.ignoreEvent(evt);
+      },
 
-    // Mouse move group
-    mousemove: function (evt) {
-      return that.handleMouseMove(evt);
-    },
-    touchmove: function (evt) {
-      return that.handleMouseMove(evt);
-    },
+      // Pointer move
+      pointermove: function (evt) {
+        return that.handleMouseMove(evt);
+      },
+      mousemove: function (evt) {
+        that.ignoreEvent(evt);
+      },
+      touchmove: function (evt) {
+        that.ignoreEvent(evt);
+      },
 
-    // Mouse leave group
-    mouseleave: function (evt) {
-      return that.handleMouseUp(evt);
-    },
-    touchleave: function (evt) {
-      return that.handleMouseUp(evt);
-    },
-    touchcancel: function (evt) {
-      return that.handleMouseUp(evt);
-    },
-  };
+      // Pointer leave group
+      pointerleave: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+      pointercancel: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+      mouseleave: function (evt) {
+        that.ignoreEvent(evt);
+      },
+      touchleave: function (evt) {
+        that.ignoreEvent(evt);
+      },
+      touchcancel: function (evt) {
+        that.ignoreEvent(evt);
+      },
+    };
+  } else {
+    this.eventListeners = {
+      // Mouse down group
+      mousedown: function (evt) {
+        var result = that.handleMouseDown(evt, prevEvt);
+        prevEvt = evt;
+        return result;
+      },
+      touchstart: function (evt) {
+        var result = that.handleMouseDown(evt, prevEvt);
+        prevEvt = evt;
+        return result;
+      },
+
+      // Mouse up group
+      mouseup: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+      touchend: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+
+      // Mouse move group
+      mousemove: function (evt) {
+        return that.handleMouseMove(evt);
+      },
+      touchmove: function (evt) {
+        return that.handleMouseMove(evt);
+      },
+
+      // Mouse leave group
+      mouseleave: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+      touchleave: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+      touchcancel: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+    };
+  }
 
   // Init custom events handler if available
   // eslint-disable-next-line eqeqeq
@@ -780,7 +838,9 @@ SvgPanZoom.prototype.setupHandlers = function () {
     (this.options.eventsListenerElement || this.svg).addEventListener(
       event,
       this.eventListeners[event],
-      !this.options.preventMouseEventsDefault ? passiveListenerOption : false
+      !this.options.preventMouseEventsDefault
+        ? passiveListenerTrueOption
+        : passiveListenerFalseOption
     );
   }
 
@@ -1143,6 +1203,21 @@ SvgPanZoom.prototype.handleMouseUp = function (evt) {
 };
 
 /**
+ * Ignore event
+ *
+ * @param {Event} evt
+ */
+SvgPanZoom.prototype.ignoreEvent = function (evt) {
+  if (this.options.preventMouseEventsDefault) {
+    if (evt.preventDefault) {
+      evt.preventDefault();
+    } else {
+      evt.returnValue = false;
+    }
+  }
+};
+
+/**
  * Adjust viewport size (only) so it will fit in SVG
  * Does not center image
  */
@@ -1279,7 +1354,9 @@ SvgPanZoom.prototype.destroy = function () {
     (this.options.eventsListenerElement || this.svg).removeEventListener(
       event,
       this.eventListeners[event],
-      !this.options.preventMouseEventsDefault ? passiveListenerOption : false
+      !this.options.preventMouseEventsDefault
+        ? passiveListenerTrueOption
+        : passiveListenerFalseOption
     );
   }
 
@@ -1831,14 +1908,20 @@ module.exports = (function() {
     prefix = "on";
   }
 
+  function getSupport() {
+    if (!support) {
+      support =
+        "onwheel" in document.createElement("div")
+          ? "wheel" // Modern browsers support "wheel"
+          : document.onmousewheel !== undefined
+          ? "mousewheel" // Webkit and IE support at least "mousewheel"
+          : "DOMMouseScroll"; // let's assume that remaining browsers are older Firefox
+    }
+    return support;
+  }
+
   function createCallback(element, callback) {
     // detect available wheel event
-    support =
-      "onwheel" in document.createElement("div")
-        ? "wheel" // Modern browsers support "wheel"
-        : document.onmousewheel !== undefined
-        ? "mousewheel" // Webkit and IE support at least "mousewheel"
-        : "DOMMouseScroll"; // let's assume that remaining browsers are older Firefox
 
     var fn = function(originalEvent) {
       !originalEvent && (originalEvent = window.event);
@@ -1860,7 +1943,7 @@ module.exports = (function() {
       };
 
       // calculate deltaY (and deltaX) according to the event
-      if (support == "mousewheel") {
+      if (getSupport() == "mousewheel") {
         event.deltaY = (-1 / 40) * originalEvent.wheelDelta;
         // Webkit also support wheelDeltaX
         originalEvent.wheelDeltaX &&
@@ -1901,7 +1984,7 @@ module.exports = (function() {
   function _addWheelListener(elem, eventName, callback, isPassiveListener) {
     var cb;
 
-    if (support === "wheel") {
+    if (getSupport() === "wheel") {
       cb = callback;
     } else {
       cb = createCallback(elem, callback);
@@ -1917,7 +2000,7 @@ module.exports = (function() {
   function _removeWheelListener(elem, eventName, callback, isPassiveListener) {
     var cb;
 
-    if (support === "wheel") {
+    if (getSupport() === "wheel") {
       cb = callback;
     } else {
       cb = getCallback(elem);
@@ -1933,10 +2016,10 @@ module.exports = (function() {
   }
 
   function addWheelListener(elem, callback, isPassiveListener) {
-    _addWheelListener(elem, support, callback, isPassiveListener);
+    _addWheelListener(elem, getSupport(), callback, isPassiveListener);
 
     // handle MozMousePixelScroll in older Firefox
-    if (support == "DOMMouseScroll") {
+    if (getSupport() == "DOMMouseScroll") {
       _addWheelListener(
         elem,
         "MozMousePixelScroll",
@@ -1947,10 +2030,10 @@ module.exports = (function() {
   }
 
   function removeWheelListener(elem, callback, isPassiveListener) {
-    _removeWheelListener(elem, support, callback, isPassiveListener);
+    _removeWheelListener(elem, getSupport(), callback, isPassiveListener);
 
     // handle MozMousePixelScroll in older Firefox
-    if (support == "DOMMouseScroll") {
+    if (getSupport() == "DOMMouseScroll") {
       _removeWheelListener(
         elem,
         "MozMousePixelScroll",
