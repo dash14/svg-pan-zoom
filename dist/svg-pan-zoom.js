@@ -1,4 +1,4 @@
-// svg-pan-zoom v3.6.2
+// svg-pan-zoom v3.6.3
 // https://github.com/ariutta/svg-pan-zoom
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 var SvgUtils = require("./svg-utilities");
@@ -623,6 +623,7 @@ var optionsDefaults = {
   customEventsHandler: null,
   eventsListenerElement: null,
   onUpdatedCTM: null,
+  usePointerEvents: true, // use pointer* events instead of mouse* and touch* events
 };
 
 var passiveListenerOption = { passive: true };
@@ -702,56 +703,112 @@ SvgPanZoom.prototype.init = function (svg, options) {
 
   // Init events handlers
   this.lastMouseWheelEventTime = Date.now();
-  this.setupHandlers();
+  this.setupHandlers(this.options.usePointerEvents);
 };
 
 /**
  * Register event handlers
  */
-SvgPanZoom.prototype.setupHandlers = function () {
+SvgPanZoom.prototype.setupHandlers = function (usePointerEvents) {
   var that = this,
     prevEvt = null; // use for touchstart event to detect double tap
 
-  this.eventListeners = {
-    // Mouse down group
-    mousedown: function (evt) {
-      var result = that.handleMouseDown(evt, prevEvt);
-      prevEvt = evt;
-      return result;
-    },
-    touchstart: function (evt) {
-      var result = that.handleMouseDown(evt, prevEvt);
-      prevEvt = evt;
-      return result;
-    },
+  if (usePointerEvents) {
+    this.eventListeners = {
+      // Pointer down
+      pointerdown: function (evt) {
+        var result = that.handleMouseDown(evt, prevEvt);
+        prevEvt = evt;
+        return result;
+      },
+      mousedown: function (evt) {
+        that.ignoreEvent(evt);
+      },
+      touchstart: function (evt) {
+        that.ignoreEvent(evt);
+      },
 
-    // Mouse up group
-    mouseup: function (evt) {
-      return that.handleMouseUp(evt);
-    },
-    touchend: function (evt) {
-      return that.handleMouseUp(evt);
-    },
+      // Pointer up
+      pointerup: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+      mouseup: function (evt) {
+        that.ignoreEvent(evt);
+      },
+      touchend: function (evt) {
+        that.ignoreEvent(evt);
+      },
 
-    // Mouse move group
-    mousemove: function (evt) {
-      return that.handleMouseMove(evt);
-    },
-    touchmove: function (evt) {
-      return that.handleMouseMove(evt);
-    },
+      // Pointer move
+      pointermove: function (evt) {
+        return that.handleMouseMove(evt);
+      },
+      mousemove: function (evt) {
+        that.ignoreEvent(evt);
+      },
+      touchmove: function (evt) {
+        that.ignoreEvent(evt);
+      },
 
-    // Mouse leave group
-    mouseleave: function (evt) {
-      return that.handleMouseUp(evt);
-    },
-    touchleave: function (evt) {
-      return that.handleMouseUp(evt);
-    },
-    touchcancel: function (evt) {
-      return that.handleMouseUp(evt);
-    },
-  };
+      // Pointer leave group
+      pointerleave: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+      pointercancel: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+      mouseleave: function (evt) {
+        that.ignoreEvent(evt);
+      },
+      touchleave: function (evt) {
+        that.ignoreEvent(evt);
+      },
+      touchcancel: function (evt) {
+        that.ignoreEvent(evt);
+      },
+    };
+  } else {
+    this.eventListeners = {
+      // Mouse down group
+      mousedown: function (evt) {
+        var result = that.handleMouseDown(evt, prevEvt);
+        prevEvt = evt;
+        return result;
+      },
+      touchstart: function (evt) {
+        var result = that.handleMouseDown(evt, prevEvt);
+        prevEvt = evt;
+        return result;
+      },
+
+      // Mouse up group
+      mouseup: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+      touchend: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+
+      // Mouse move group
+      mousemove: function (evt) {
+        return that.handleMouseMove(evt);
+      },
+      touchmove: function (evt) {
+        return that.handleMouseMove(evt);
+      },
+
+      // Mouse leave group
+      mouseleave: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+      touchleave: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+      touchcancel: function (evt) {
+        return that.handleMouseUp(evt);
+      },
+    };
+  }
 
   // Init custom events handler if available
   // eslint-disable-next-line eqeqeq
@@ -1139,6 +1196,21 @@ SvgPanZoom.prototype.handleMouseUp = function (evt) {
   if (this.state === "pan") {
     // Quit pan mode
     this.state = "none";
+  }
+};
+
+/**
+ * Ignore event
+ *
+ * @param {Event} evt
+ */
+SvgPanZoom.prototype.ignoreEvent = function (evt) {
+  if (this.options.preventMouseEventsDefault) {
+    if (evt.preventDefault) {
+      evt.preventDefault();
+    } else {
+      evt.returnValue = false;
+    }
   }
 };
 
