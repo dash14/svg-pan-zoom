@@ -1,4 +1,4 @@
-// svg-pan-zoom v3.6.3
+// svg-pan-zoom v3.6.4
 // https://github.com/ariutta/svg-pan-zoom
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 var SvgUtils = require("./svg-utilities");
@@ -623,7 +623,6 @@ var optionsDefaults = {
   customEventsHandler: null,
   eventsListenerElement: null,
   onUpdatedCTM: null,
-  usePointerEvents: true, // use pointer* events instead of mouse* and touch* events
 };
 
 var passiveListenerTrueOption = { passive: true };
@@ -704,112 +703,56 @@ SvgPanZoom.prototype.init = function (svg, options) {
 
   // Init events handlers
   this.lastMouseWheelEventTime = Date.now();
-  this.setupHandlers(this.options.usePointerEvents);
+  this.setupHandlers();
 };
 
 /**
  * Register event handlers
  */
-SvgPanZoom.prototype.setupHandlers = function (usePointerEvents) {
+SvgPanZoom.prototype.setupHandlers = function () {
   var that = this,
     prevEvt = null; // use for touchstart event to detect double tap
 
-  if (usePointerEvents) {
-    this.eventListeners = {
-      // Pointer down
-      pointerdown: function (evt) {
-        var result = that.handleMouseDown(evt, prevEvt);
-        prevEvt = evt;
-        return result;
-      },
-      mousedown: function (evt) {
-        that.ignoreEvent(evt);
-      },
-      touchstart: function (evt) {
-        that.ignoreEvent(evt);
-      },
+  this.eventListeners = {
+    // Mouse down group
+    mousedown: function (evt) {
+      var result = that.handleMouseDown(evt, prevEvt);
+      prevEvt = evt;
+      return result;
+    },
+    touchstart: function (evt) {
+      var result = that.handleTouchStart(evt, prevEvt);
+      prevEvt = evt;
+      return result;
+    },
 
-      // Pointer up
-      pointerup: function (evt) {
-        return that.handleMouseUp(evt);
-      },
-      mouseup: function (evt) {
-        that.ignoreEvent(evt);
-      },
-      touchend: function (evt) {
-        that.ignoreEvent(evt);
-      },
+    // Mouse up group
+    mouseup: function (evt) {
+      return that.handleMouseUp(evt);
+    },
+    touchend: function (evt) {
+      return that.handleTouchEnd(evt);
+    },
 
-      // Pointer move
-      pointermove: function (evt) {
-        return that.handleMouseMove(evt);
-      },
-      mousemove: function (evt) {
-        that.ignoreEvent(evt);
-      },
-      touchmove: function (evt) {
-        that.ignoreEvent(evt);
-      },
+    // Mouse move group
+    mousemove: function (evt) {
+      return that.handleMouseMove(evt);
+    },
+    touchmove: function (evt) {
+      return that.handleTouchMove(evt);
+    },
 
-      // Pointer leave group
-      pointerleave: function (evt) {
-        return that.handleMouseUp(evt);
-      },
-      pointercancel: function (evt) {
-        return that.handleMouseUp(evt);
-      },
-      mouseleave: function (evt) {
-        that.ignoreEvent(evt);
-      },
-      touchleave: function (evt) {
-        that.ignoreEvent(evt);
-      },
-      touchcancel: function (evt) {
-        that.ignoreEvent(evt);
-      },
-    };
-  } else {
-    this.eventListeners = {
-      // Mouse down group
-      mousedown: function (evt) {
-        var result = that.handleMouseDown(evt, prevEvt);
-        prevEvt = evt;
-        return result;
-      },
-      touchstart: function (evt) {
-        var result = that.handleMouseDown(evt, prevEvt);
-        prevEvt = evt;
-        return result;
-      },
-
-      // Mouse up group
-      mouseup: function (evt) {
-        return that.handleMouseUp(evt);
-      },
-      touchend: function (evt) {
-        return that.handleMouseUp(evt);
-      },
-
-      // Mouse move group
-      mousemove: function (evt) {
-        return that.handleMouseMove(evt);
-      },
-      touchmove: function (evt) {
-        return that.handleMouseMove(evt);
-      },
-
-      // Mouse leave group
-      mouseleave: function (evt) {
-        return that.handleMouseUp(evt);
-      },
-      touchleave: function (evt) {
-        return that.handleMouseUp(evt);
-      },
-      touchcancel: function (evt) {
-        return that.handleMouseUp(evt);
-      },
-    };
-  }
+    // Mouse leave group
+    mouseleave: function (evt) {
+      return that.handleMouseUp(evt);
+    },
+    touchleave: function (evt) {
+      return that.handleTouchEnd(evt);
+    },
+    touchcancel: function (evt) {
+      return that.handleTouchEnd(evt);
+    },
+  };
 
   // Init custom events handler if available
   // eslint-disable-next-line eqeqeq
@@ -1203,16 +1146,110 @@ SvgPanZoom.prototype.handleMouseUp = function (evt) {
 };
 
 /**
- * Ignore event
+ * Handle click event
  *
  * @param {Event} evt
  */
-SvgPanZoom.prototype.ignoreEvent = function (evt) {
-  if (this.options.preventMouseEventsDefault) {
-    if (evt.preventDefault) {
-      evt.preventDefault();
+SvgPanZoom.prototype.handleTouchStart = function (evt, prevEvt) {
+  if (evt.touches.length == 1) {
+    this.handleMouseDown(evt, prevEvt);
+  } else {
+    if (this.options.preventMouseEventsDefault) {
+      if (evt.preventDefault) {
+        evt.preventDefault();
+      } else {
+        evt.returnValue = false;
+      }
+    }
+
+    this.firstEventCTM = this.viewport.getCTM();
+    var touch1 = SvgUtils.getTouchPoint(evt, this.svg, 0);
+    var touch2 = SvgUtils.getTouchPoint(evt, this.svg, 1);
+    this.firstDistance = Utils.calculateDistance(touch1, touch2);
+    touch1.x = (touch1.x + touch2.x) / 2;
+    touch1.y = (touch1.y + touch2.y) / 2;
+    this.stateOrigin = touch1.matrixTransform(this.firstEventCTM.inverse());
+    this.firstZoomLevel = this.getZoom();
+  }
+};
+
+/**
+ * Handle mouse move event
+ *
+ * @param  {Event} evt
+ */
+SvgPanZoom.prototype.handleTouchMove = function (evt) {
+  if (evt.touches.length == 1) {
+    this.handleMouseMove(evt);
+  } else {
+    // pan and zoom
+    if (this.options.preventMouseEventsDefault) {
+      if (evt.preventDefault) {
+        evt.preventDefault();
+      } else {
+        evt.returnValue = false;
+      }
+    }
+    if (!this.options.panEnabled && !this.options.zoomEnabled) {
+      return;
+    }
+
+    var touch1 = SvgUtils.getTouchPoint(evt, this.svg, 0);
+    var touch2 = SvgUtils.getTouchPoint(evt, this.svg, 1);
+    var center = this.svg.createSVGPoint();
+    center.x = (touch1.x + touch2.x) / 2;
+    center.y = (touch1.y + touch2.y) / 2;
+
+    if (this.state === "pan" && this.options.panEnabled) {
+      // Pan mode
+      var point = center.matrixTransform(this.firstEventCTM.inverse());
+      var viewportCTM = this.firstEventCTM.translate(
+        point.x - this.stateOrigin.x,
+        point.y - this.stateOrigin.y
+      );
+      this.viewport.setCTM(viewportCTM);
+    }
+
+    if (this.options.zoomEnabled) {
+      // zoom
+      var distance = Utils.calculateDistance(touch1, touch2);
+      var scale = distance / this.firstDistance;
+      var inversedScreenCTM = this.svg.getScreenCTM().inverse();
+      var relativeTouchPoint = center.matrixTransform(inversedScreenCTM);
+      this.zoomAtPoint(this.firstZoomLevel * scale, relativeTouchPoint, true);
+    }
+  }
+};
+
+/**
+ * Handle mouse button release event
+ *
+ * @param {Event} evt
+ */
+SvgPanZoom.prototype.handleTouchEnd = function (evt) {
+  if (evt.touches.length == 0) {
+    this.handleMouseUp(evt);
+  } else {
+    if (this.options.preventMouseEventsDefault) {
+      if (evt.preventDefault) {
+        evt.preventDefault();
+      } else {
+        evt.returnValue = false;
+      }
+    }
+
+    this.firstEventCTM = this.viewport.getCTM();
+    if (evt.touches.length == 1) {
+      this.stateOrigin = SvgUtils.getEventPoint(evt, this.svg).matrixTransform(
+        this.firstEventCTM.inverse()
+      );
     } else {
-      evt.returnValue = false;
+      var touch1 = SvgUtils.getTouchPoint(evt, this.svg, 0);
+      var touch2 = SvgUtils.getTouchPoint(evt, this.svg, 1);
+      this.firstDistance = Utils.calculateDistance(touch1, touch2);
+      touch1.x = (touch1.x + touch2.x) / 2;
+      touch1.y = (touch1.y + touch2.y) / 2;
+      this.stateOrigin = touch1.matrixTransform(this.firstEventCTM.inverse());
     }
   }
 };
@@ -1854,6 +1891,25 @@ module.exports = {
   },
 
   /**
+   * Instantiate an SVGPoint object with given touch event coordinates
+   *
+   * @param {Event} evt
+   * @param  {SVGSVGElement} svg
+   * @param  {Number} touch
+   * @return {SVGPoint}     point
+   */
+  getTouchPoint: function (evt, svg, touch) {
+    var point = svg.createSVGPoint();
+
+    Utils.touchNormalize(evt, svg, touch);
+
+    point.x = evt.clientX;
+    point.y = evt.clientY;
+
+    return point;
+  },
+
+  /**
    * Get SVG center point
    *
    * @param  {SVGSVGElement} svg
@@ -2245,6 +2301,42 @@ module.exports = {
   },
 
   /**
+   * If it is a touch event than add clientX and clientY to event object
+   *
+   * @param  {Event} evt
+   * @param  {SVGSVGElement} svg
+   * @param  {Number} touch
+   */
+  touchNormalize: function (evt, svg, touch) {
+    // If it is a touch event
+    if (evt.touches !== void 0 && evt.touches.length) {
+      if (evt.touches[touch].clientX !== void 0) {
+        evt.clientX = evt.touches[touch].clientX;
+        evt.clientY = evt.touches[touch].clientY;
+      } else if (evt.touches[touch].pageX !== void 0) {
+        var rect = svg.getBoundingClientRect();
+
+        evt.clientX = evt.touches[touch].pageX - rect.left;
+        evt.clientY = evt.touches[touch].pageY - rect.top;
+      }
+      // If it is a custom event
+    } else {
+      // If no clientX then fallback
+      if (evt.clientX === void 0 || evt.clientX === null) {
+        // Fallback
+        evt.clientX = 0;
+        evt.clientY = 0;
+        if (evt.originalEvent !== void 0) {
+          if (evt.originalEvent.clientX !== void 0) {
+            evt.clientX = evt.originalEvent.clientX;
+            evt.clientY = evt.originalEvent.clientY;
+          }
+        }
+      }
+    }
+  },
+
+  /**
    * Check if an event is a double click/tap
    * TODO: For touch gestures use a library (hammer.js) that takes in account other events
    * (touchmove and touchend). It should take in account tap duration and traveled distance
@@ -2348,6 +2440,19 @@ module.exports = {
     } else {
       return requestTimeout(timeout);
     }
+  },
+
+  /**
+   * Calculate distance of points
+   *
+   * @param  {SVGPoint} point1
+   * @param  {SVGPoint} point2
+   * @return {Number}
+   */
+  calculateDistance: function (point1, point2) {
+    var dx = point1.x - point2.x;
+    var dy = point1.y - point2.y;
+    return Math.sqrt(dx * dx + dy * dy);
   },
 };
 
