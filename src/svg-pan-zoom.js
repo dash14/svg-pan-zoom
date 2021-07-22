@@ -128,7 +128,7 @@ SvgPanZoom.prototype.setupHandlers = function () {
       return result;
     },
     touchstart: function (evt) {
-      var result = that.handleMouseDown(evt, prevEvt);
+      var result = that.handleTouchStart(evt, prevEvt);
       prevEvt = evt;
       return result;
     },
@@ -138,7 +138,7 @@ SvgPanZoom.prototype.setupHandlers = function () {
       return that.handleMouseUp(evt);
     },
     touchend: function (evt) {
-      return that.handleMouseUp(evt);
+      return that.handleTouchEnd(evt);
     },
 
     // Mouse move group
@@ -146,7 +146,7 @@ SvgPanZoom.prototype.setupHandlers = function () {
       return that.handleMouseMove(evt);
     },
     touchmove: function (evt) {
-      return that.handleMouseMove(evt);
+      return that.handleTouchMove(evt);
     },
 
     // Mouse leave group
@@ -154,10 +154,10 @@ SvgPanZoom.prototype.setupHandlers = function () {
       return that.handleMouseUp(evt);
     },
     touchleave: function (evt) {
-      return that.handleMouseUp(evt);
+      return that.handleTouchEnd(evt);
     },
     touchcancel: function (evt) {
-      return that.handleMouseUp(evt);
+      return that.handleTouchEnd(evt);
     },
   };
 
@@ -549,6 +549,115 @@ SvgPanZoom.prototype.handleMouseUp = function (evt) {
   if (this.state === "pan") {
     // Quit pan mode
     this.state = "none";
+  }
+};
+
+/**
+ * Handle click event
+ *
+ * @param {Event} evt
+ */
+SvgPanZoom.prototype.handleTouchStart = function (evt, prevEvt) {
+  if (evt.touches.length == 1) {
+    this.handleMouseDown(evt, prevEvt);
+  } else {
+    if (this.options.preventMouseEventsDefault) {
+      if (evt.preventDefault) {
+        evt.preventDefault();
+      } else {
+        evt.returnValue = false;
+      }
+    }
+
+    this.firstEventCTM = this.viewport.getCTM();
+    var touch1 = SvgUtils.getTouchPoint(evt, this.svg, 0);
+    var touch2 = SvgUtils.getTouchPoint(evt, this.svg, 1);
+    this.firstDistance = Utils.calculateDistance(touch1, touch2);
+    touch1.x = (touch1.x + touch2.x) / 2;
+    touch1.y = (touch1.y + touch2.y) / 2;
+    this.stateOrigin = touch1.matrixTransform(this.firstEventCTM.inverse());
+    this.firstZoomLevel = this.getZoom();
+  }
+};
+
+/**
+ * Handle mouse move event
+ *
+ * @param  {Event} evt
+ */
+SvgPanZoom.prototype.handleTouchMove = function (evt) {
+  if (evt.touches.length == 1) {
+    this.handleMouseMove(evt);
+  } else {
+    // pan and zoom
+    if (this.options.preventMouseEventsDefault) {
+      if (evt.preventDefault) {
+        evt.preventDefault();
+      } else {
+        evt.returnValue = false;
+      }
+    }
+    if (!this.options.panEnabled && !this.options.zoomEnabled) {
+      return;
+    }
+
+    var touch1 = SvgUtils.getTouchPoint(evt, this.svg, 0);
+    var touch2 = SvgUtils.getTouchPoint(evt, this.svg, 1);
+    var center = this.svg.createSVGPoint();
+    center.x = (touch1.x + touch2.x) / 2;
+    center.y = (touch1.y + touch2.y) / 2;
+
+    if (this.state === "pan" && this.options.panEnabled) {
+      // Pan mode
+      var point = center.matrixTransform(this.firstEventCTM.inverse());
+      var viewportCTM = this.firstEventCTM.translate(
+        point.x - this.stateOrigin.x,
+        point.y - this.stateOrigin.y
+      );
+      this.viewport.setCTM(viewportCTM);
+    }
+
+    if (this.options.zoomEnabled) {
+      // zoom
+      var distance = Utils.calculateDistance(touch1, touch2);
+      var scale = distance / this.firstDistance;
+      var inversedScreenCTM = this.svg.getScreenCTM().inverse();
+      var relativeTouchPoint = center.matrixTransform(inversedScreenCTM);
+      this.zoomAtPoint(this.firstZoomLevel * scale, relativeTouchPoint, true);
+    }
+  }
+};
+
+/**
+ * Handle mouse button release event
+ *
+ * @param {Event} evt
+ */
+SvgPanZoom.prototype.handleTouchEnd = function (evt) {
+  if (evt.touches.length == 0) {
+    this.handleMouseUp(evt);
+  } else {
+    if (this.options.preventMouseEventsDefault) {
+      if (evt.preventDefault) {
+        evt.preventDefault();
+      } else {
+        evt.returnValue = false;
+      }
+    }
+
+    this.firstEventCTM = this.viewport.getCTM();
+    if (evt.touches.length == 1) {
+      this.stateOrigin = SvgUtils.getEventPoint(evt, this.svg).matrixTransform(
+        this.firstEventCTM.inverse()
+      );
+    } else {
+      var touch1 = SvgUtils.getTouchPoint(evt, this.svg, 0);
+      var touch2 = SvgUtils.getTouchPoint(evt, this.svg, 1);
+      this.firstDistance = Utils.calculateDistance(touch1, touch2);
+      touch1.x = (touch1.x + touch2.x) / 2;
+      touch1.y = (touch1.y + touch2.y) / 2;
+      this.stateOrigin = touch1.matrixTransform(this.firstEventCTM.inverse());
+    }
   }
 };
 

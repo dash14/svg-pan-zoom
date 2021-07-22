@@ -217,6 +217,25 @@ module.exports = {
   },
 
   /**
+   * Instantiate an SVGPoint object with given touch event coordinates
+   *
+   * @param {Event} evt
+   * @param  {SVGSVGElement} svg
+   * @param  {Number} touch
+   * @return {SVGPoint}     point
+   */
+  getTouchPoint: function (evt, svg, touch) {
+    var point = svg.createSVGPoint();
+
+    Utils.touchNormalize(evt, svg, touch);
+
+    point.x = evt.clientX;
+    point.y = evt.clientY;
+
+    return point;
+  },
+
+  /**
    * Get SVG center point
    *
    * @param  {SVGSVGElement} svg

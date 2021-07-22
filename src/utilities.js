@@ -192,6 +192,42 @@ module.exports = {
   },
 
   /**
+   * If it is a touch event than add clientX and clientY to event object
+   *
+   * @param  {Event} evt
+   * @param  {SVGSVGElement} svg
+   * @param  {Number} touch
+   */
+  touchNormalize: function (evt, svg, touch) {
+    // If it is a touch event
+    if (evt.touches !== void 0 && evt.touches.length) {
+      if (evt.touches[touch].clientX !== void 0) {
+        evt.clientX = evt.touches[touch].clientX;
+        evt.clientY = evt.touches[touch].clientY;
+      } else if (evt.touches[touch].pageX !== void 0) {
+        var rect = svg.getBoundingClientRect();
+
+        evt.clientX = evt.touches[touch].pageX - rect.left;
+        evt.clientY = evt.touches[touch].pageY - rect.top;
+      }
+      // If it is a custom event
+    } else {
+      // If no clientX then fallback
+      if (evt.clientX === void 0 || evt.clientX === null) {
+        // Fallback
+        evt.clientX = 0;
+        evt.clientY = 0;
+        if (evt.originalEvent !== void 0) {
+          if (evt.originalEvent.clientX !== void 0) {
+            evt.clientX = evt.originalEvent.clientX;
+            evt.clientY = evt.originalEvent.clientY;
+          }
+        }
+      }
+    }
+  },
+
+  /**
    * Check if an event is a double click/tap
    * TODO: For touch gestures use a library (hammer.js) that takes in account other events
    * (touchmove and touchend). It should take in account tap duration and traveled distance
@@ -295,6 +331,19 @@ module.exports = {
     } else {
       return requestTimeout(timeout);
     }
+  },
+
+  /**
+   * Calculate distance of points
+   *
+   * @param  {SVGPoint} point1
+   * @param  {SVGPoint} point2
+   * @return {Number}
+   */
+  calculateDistance: function (point1, point2) {
+    var dx = point1.x - point2.x;
+    var dy = point1.y - point2.y;
+    return Math.sqrt(dx * dx + dy * dy);
   },
 };
 
