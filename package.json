@@ -1,5 +1,5 @@
 {
-  "name": "svg-pan-zoom",
+  "name": "@dash14/svg-pan-zoom",
   "version": "3.6.4",
   "main": "dist/svg-pan-zoom.js",
   "module": "src/svg-pan-zoom.js",
@@ -16,10 +16,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ariutta/svg-pan-zoom"
+    "url": "https://github.com/dash14/svg-pan-zoom"
   },
   "bugs": {
-    "url": "https://github.com/ariutta/svg-pan-zoom/issues"
+    "url": "https://github.com/dash14/svg-pan-zoom/issues"
   },
   "contributors": [
     "Andrea Leofreddi <a.leofreddi@vleo.net>",
@@ -68,5 +68,8 @@
     "typescript": "^4.3.5",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
