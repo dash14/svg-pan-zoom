@@ -1,3 +1,14 @@
+This library was forked from https://github.com/bumbu/svg-pan-zoom for the purpose of
+using it in [v-network-graph](https://github.com/dash14/v-network-graph).
+
+The following changes have been made from the original:
+* Add support pan and zoom with multi-touch.
+* Export type definitions in typescript.
+* Do not access `window` and `document` when exporting the module.
+* Specify `{passive: false}` explicitly to the event listeners to prevent warnings.
+
+---
+
 ![svg-pan-zoom logo](./svg-pan-zoom-logo.png)
 
 svg-pan-zoom library
