@@ -810,9 +810,6 @@ SvgPanZoom.prototype.destroy = function () {
   // Remove control icons
   this.getPublicInstance().disableControlIcons();
 
-  // Reset zoom and pan
-  this.reset();
-
   // Remove instance from instancesStore
   instancesStore = instancesStore.filter(function (instance) {
     return instance.svg !== that.svg;
