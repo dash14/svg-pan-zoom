@@ -123,11 +123,17 @@ SvgPanZoom.prototype.setupHandlers = function () {
   this.eventListeners = {
     // Mouse down group
     mousedown: function (evt) {
+      if (prevEvt && !(prevEvt instanceof MouseEvent)) {
+        return that.handleMouseDown(evt, null);
+      }
       var result = that.handleMouseDown(evt, prevEvt);
       prevEvt = evt;
       return result;
     },
     touchstart: function (evt) {
+      if (prevEvt && !(prevEvt instanceof TouchEvent)) {
+        return that.handleMouseDown(evt, null);
+      }
       var result = that.handleTouchStart(evt, prevEvt);
       prevEvt = evt;
       return result;
