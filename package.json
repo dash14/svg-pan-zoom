@@ -1,6 +1,6 @@
 {
   "name": "@dash14/svg-pan-zoom",
-  "version": "3.6.5",
+  "version": "3.6.6",
   "main": "dist/svg-pan-zoom.js",
   "module": "src/svg-pan-zoom.js",
   "types": "dist/svg-pan-zoom.d.ts",
