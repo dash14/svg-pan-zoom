@@ -122,25 +122,21 @@ SvgPanZoom.prototype.setupHandlers = function () {
 
   this.eventListeners = {
     // Mouse down group
-    mousedown: function (evt) {
-      if (prevEvt && !(prevEvt instanceof MouseEvent)) {
-        return that.handleMouseDown(evt, null);
-      }
+    pointerdown: function (evt) {
+      if (evt.pointerType === "touch") return;
       var result = that.handleMouseDown(evt, prevEvt);
       prevEvt = evt;
       return result;
     },
     touchstart: function (evt) {
-      if (prevEvt && !(prevEvt instanceof TouchEvent)) {
-        return that.handleMouseDown(evt, null);
-      }
       var result = that.handleTouchStart(evt, prevEvt);
       prevEvt = evt;
       return result;
     },
 
     // Mouse up group
-    mouseup: function (evt) {
+    pointerup: function (evt) {
+      if (evt.pointerType === "touch") return;
       return that.handleMouseUp(evt);
     },
     touchend: function (evt) {
@@ -148,7 +144,8 @@ SvgPanZoom.prototype.setupHandlers = function () {
     },
 
     // Mouse move group
-    mousemove: function (evt) {
+    pointermove: function (evt) {
+      if (evt.pointerType === "touch") return;
       return that.handleMouseMove(evt);
     },
     touchmove: function (evt) {
@@ -156,7 +153,12 @@ SvgPanZoom.prototype.setupHandlers = function () {
     },
 
     // Mouse leave group
-    mouseleave: function (evt) {
+    pointerleave: function (evt) {
+      if (evt.pointerType === "touch") return;
+      return that.handleMouseUp(evt);
+    },
+    pointercancel: function (evt) {
+      if (evt.pointerType === "touch") return;
       return that.handleMouseUp(evt);
     },
     touchleave: function (evt) {
@@ -494,6 +496,8 @@ SvgPanZoom.prototype.handleMouseDown = function (evt, prevEvt) {
       evt.returnValue = false;
     }
   }
+  console.log("handleMouseDown");
+  console.log(Utils.isDblClick(evt, prevEvt));
 
   Utils.mouseAndTouchNormalize(evt, this.svg);
 
