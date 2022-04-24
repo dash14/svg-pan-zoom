@@ -496,8 +496,6 @@ SvgPanZoom.prototype.handleMouseDown = function (evt, prevEvt) {
       evt.returnValue = false;
     }
   }
-  console.log("handleMouseDown");
-  console.log(Utils.isDblClick(evt, prevEvt));
 
   Utils.mouseAndTouchNormalize(evt, this.svg);
 
