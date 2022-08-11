@@ -272,7 +272,7 @@ ShadowViewport.prototype.cacheViewBox = function () {
     );
 
     // Update active state
-    this.activeState.zoom = zoom;
+    this.activeState.zoom = isFinite(zoom) ? zoom : 1;
     this.activeState.x = (this.options.width - this.viewBox.width * zoom) / 2;
     this.activeState.y = (this.options.height - this.viewBox.height * zoom) / 2;
 
@@ -328,6 +328,8 @@ ShadowViewport.prototype.processCTM = function () {
         this.options.height / this.viewBox.height
       );
     }
+
+    newScale = isFinite(newScale) ? newScale : 1;
 
     newCTM.a = newScale; //x-scale
     newCTM.d = newScale; //y-scale
