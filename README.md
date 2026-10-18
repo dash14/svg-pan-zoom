@@ -49,11 +49,11 @@ If you have any other type of questions, problems, your code is not working or y
 Best way to contribute is to create a pull request. In order to create a pull request:
 * Fork this repository
 * Clone repository fork (created in previous step) locally (on your machine)
-* Ensure that you have nodejs and npm installed locally
+* Ensure that you have nodejs and pnpm installed locally
 * In console:
   * `cd` into project folder
-  * Run `npm install`
-  * Run `npm install -g gulp` if you don't have it already installed globally
+  * Run `pnpm install`
+  * Run the commands below with `pnpm exec`, for example `pnpm exec gulp compile`
   * Running `gulp` will listen for source files changes (in `src` folder) and will automatically build distribution files
   * Running `gulp compile` will compile source files
   * Running `gulp check` will check syntax and automatically fix some errors

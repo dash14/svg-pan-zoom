@@ -1,0 +1,11 @@
+engineStrict: true
+
+minimumReleaseAge: 20160 # 2 weeks
+
+trustPolicy: no-downgrade
+
+allowBuilds:
+  # Optional native watcher for gulp watch; chokidar works without it.
+  fsevents: false
+  # Downloads the PhantomJS binary for gulp-qunit and checks it against a pinned SHA-256.
+  phantomjs-prebuilt: true
