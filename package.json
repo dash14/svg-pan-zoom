@@ -5,6 +5,10 @@
   "module": "src/svg-pan-zoom.js",
   "types": "dist/svg-pan-zoom.d.ts",
   "browser": "src/browserify.js",
+  "files": [
+    "dist",
+    "src/*.js"
+  ],
   "license": "BSD-2-Clause",
   "description": "JavaScript library for panning and zooming an SVG image from the mouse, touches and programmatically.",
   "scripts": {
