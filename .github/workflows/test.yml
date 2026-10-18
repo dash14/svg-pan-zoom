@@ -73,6 +73,18 @@ jobs:
       - name: Build
         run: pnpm exec gulp compile
 
+      # dist/ is committed and published as is, so it must be what this source builds to.
+      # Untracked files count too, so that a new output file cannot slip past.
+      - name: Check dist matches the build
+        run: |
+          CHANGED=$(git status --porcelain --untracked-files=all -- dist)
+          if [ -n "$CHANGED" ]; then
+            echo "::error::dist/ differs from the build of this source:"
+            echo "$CHANGED"
+            git diff --stat -- dist
+            exit 1
+          fi
+
       - name: Test
         env:
           # PhantomJS bundles an old OpenSSL that fails to load the runner's OpenSSL 3 config.
