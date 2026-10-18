@@ -6,6 +6,17 @@ and npm attaches a provenance attestation that links the package to the workflow
 it. The trusted publisher is allowed to stage only, so nothing goes live until a maintainer
 approves it on npm with 2FA.
 
+## Setup
+
+These settings live outside the repository and are what the workflow relies on:
+
+- The `release` environment requires a maintainer's approval and accepts deployments from `main`
+  only. This is what keeps another branch from publishing: the workflow's own check for `main`
+  runs from the dispatched branch's copy of the file, which that branch can change.
+- On npm, the package's trusted publisher is this repository's `release.yml` in the `release`
+  environment, allowed to stage only. Publishing access requires 2FA and disallows tokens.
+- Immutable releases are enabled for the repository.
+
 ## Steps
 
 1. Bump `version` in `package.json`, rebuild `dist/` with `pnpm exec gulp compile` (its banner
