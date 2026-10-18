@@ -31,6 +31,8 @@ function compile() {
     .bundle()
     .on("error", function (err) {
       console.log(err.toString());
+      // Fails `gulp compile` without stopping `gulp watch`.
+      process.exitCode = 1;
       this.emit("end");
     })
     .pipe(source("svg-pan-zoom.js"))
