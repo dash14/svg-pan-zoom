@@ -74,6 +74,9 @@ jobs:
         run: pnpm exec gulp compile
 
       - name: Test
+        env:
+          # PhantomJS bundles an old OpenSSL that fails to load the runner's OpenSSL 3 config.
+          OPENSSL_CONF: /dev/null
         run: pnpm test
 
   # A single, stably named job for branch protection to require.
