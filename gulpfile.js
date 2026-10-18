@@ -27,14 +27,8 @@ function isFixed(file) {
  *  Build script
  */
 function compile() {
-  return browserify({ entries: "./src/stand-alone.js" })
-    .bundle()
-    .on("error", function (err) {
-      console.log(err.toString());
-      // Fails `gulp compile` without stopping `gulp watch`.
-      process.exitCode = 1;
-      this.emit("end");
-    })
+  var bundle = browserify({ entries: "./src/stand-alone.js" }).bundle();
+  var output = bundle
     .pipe(source("svg-pan-zoom.js"))
     .pipe(buffer())
     .pipe(header(banner, { pkg: pkg }))
@@ -43,6 +37,11 @@ function compile() {
     .pipe(uglify())
     .pipe(header(banner, { pkg: pkg }))
     .pipe(gulp.dest("./dist/"));
+  // pipe() does not forward errors, so pass bundling errors on to gulp to fail the task.
+  bundle.on("error", function (err) {
+    output.emit("error", err);
+  });
+  return output;
 }
 
 /**
