@@ -11,6 +11,19 @@
   ],
   "license": "BSD-2-Clause",
   "description": "JavaScript library for panning and zooming an SVG image from the mouse, touches and programmatically.",
+  "packageManager": "pnpm@12.9.1",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "24.21.0",
+      "onFail": "download"
+    },
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.9.1",
+      "onFail": "download"
+    }
+  },
   "scripts": {
     "start": "gulp",
     "lint": "tslint 'dist/svg-pan-zoom.d.ts'",
