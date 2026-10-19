@@ -9,6 +9,5 @@
   "trailingComma": "es5",
   "bracketSpacing": true,
   "arrowParens": "always",
-  "sortPackageJson": false,
   "ignorePatterns": ["dist/**", "demo/**", "tests/assets/**", "src/uniwheel.js", "*.html", "*.md", "*.yml", "*.yaml", "*.json"]
 }

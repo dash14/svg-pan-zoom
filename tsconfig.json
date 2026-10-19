@@ -3,13 +3,13 @@
     "module": "preserve",
     "moduleResolution": "bundler",
     "target": "es2020",
+    "lib": ["es5", "dom"],
     "diagnostics": true,
     "noEmit": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": false,
-    "forceConsistentCasingInFileNames": true,
-    "types": []
+    "forceConsistentCasingInFileNames": true
   },
   "files": [
     "dist/svg-pan-zoom.d.ts",
