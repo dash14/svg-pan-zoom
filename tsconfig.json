@@ -1,19 +1,9 @@
 {
   "compilerOptions": {
-    "module": "UMD",
-    "moduleResolution": "node",
-    "target": "es5",
-    "diagnostics": true,
+    "module": "preserve",
+    "lib": ["es5", "dom"],
     "noEmit": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "strictNullChecks": false,
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": "./",
-    "typeRoots": [
-      "./"
-    ],
-    "types": []
+    "strictNullChecks": false
   },
   "files": [
     "dist/svg-pan-zoom.d.ts",

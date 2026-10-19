@@ -19,7 +19,7 @@ These settings live outside the repository and are what the workflow relies on:
 
 ## Steps
 
-1. Bump `version` in `package.json`, rebuild `dist/` with `pnpm exec gulp compile` (its banner
+1. Bump `version` in `package.json`, rebuild `dist/` with `pnpm run build` (its banner
    carries the version), and merge both into `main` through a pull request.
 2. Run the `Release` workflow from `main` (Actions > Release > Run workflow), giving the version
    as a tag, for example `v1.2.3` or `v1.2.3-beta.1`.

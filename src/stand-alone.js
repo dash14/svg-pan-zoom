@@ -13,7 +13,7 @@ var Utils = require("./utilities");
     module.exports = svgPanZoom;
 
     // Browser
-    // Keep exporting globally as module.exports is available because of browserify
+    // Keep exporting globally: the bundle in dist/ always provides module, so this is also its browser path
     _this.svgPanZoom = svgPanZoom;
   }
 })(Utils.getGlobalThis());

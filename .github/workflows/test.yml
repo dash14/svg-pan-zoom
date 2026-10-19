@@ -19,7 +19,7 @@ permissions: {}
 
 jobs:
   test:
-    name: Lint, build and test
+    name: Format, build and test
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -64,14 +64,11 @@ jobs:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: ${{ steps.pnpm-cache.outputs.cache-primary-key }}
 
-      # gulp check fixes what it can, so a fix left uncommitted shows up as a diff.
-      - name: Lint
-        run: |
-          pnpm exec gulp check
-          git diff --exit-code
+      - name: Check formatting
+        run: pnpm run format:check
 
       - name: Build
-        run: pnpm exec gulp compile
+        run: pnpm run build
 
       # dist/ is committed and published as is, so it must be what this source builds to.
       # Untracked files count too, so that a new output file cannot slip past.
@@ -86,10 +83,9 @@ jobs:
           fi
 
       - name: Test
-        env:
-          # PhantomJS bundles an old OpenSSL that fails to load the runner's OpenSSL 3 config.
-          OPENSSL_CONF: /dev/null
-        run: pnpm test
+        run: |
+          pnpm exec playwright install --with-deps --only-shell chromium
+          pnpm test
 
   # A single, stably named job for branch protection to require.
   tests-passed:
