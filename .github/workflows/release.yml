@@ -82,7 +82,14 @@ jobs:
       - name: Build
         run: pnpm exec gulp compile
 
+      - name: Test
+        env:
+          # PhantomJS bundles an old OpenSSL that fails to load the runner's OpenSSL 3 config.
+          OPENSSL_CONF: /dev/null
+        run: pnpm test
+
       # dist/ is committed and published as is, so it must be what this source builds to.
+      # Runs right before packing, so that nothing run since the build can change what is packed.
       # Untracked files count too, so that a new output file cannot slip past.
       - name: Check dist matches the build
         run: |
@@ -93,12 +100,6 @@ jobs:
             git diff --stat -- dist
             exit 1
           fi
-
-      - name: Test
-        env:
-          # PhantomJS bundles an old OpenSSL that fails to load the runner's OpenSSL 3 config.
-          OPENSSL_CONF: /dev/null
-        run: pnpm test
 
       - name: Pack
         run: pnpm pack --pack-destination "$RUNNER_TEMP/package"
@@ -128,8 +129,7 @@ jobs:
         with:
           persist-credentials: false
 
-      # Staged publishing needs npm 11.15.0 or later. The npm bundled with this Node is new enough,
-      # so this job installs nothing from the registry while it holds the publishing tokens.
+      # The npm bundled with the Node in devEngines.runtime is new enough for staged publishing (11.15.0+).
       - name: Set up Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
