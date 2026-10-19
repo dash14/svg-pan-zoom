@@ -71,7 +71,7 @@ jobs:
           git diff --exit-code
 
       - name: Build
-        run: pnpm exec gulp compile
+        run: pnpm run build
 
       # dist/ is committed and published as is, so it must be what this source builds to.
       # Untracked files count too, so that a new output file cannot slip past.

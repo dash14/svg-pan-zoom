@@ -5,5 +5,7 @@ minimumReleaseAge: 20160 # 2 weeks
 trustPolicy: no-downgrade
 
 allowBuilds:
+  # Its postinstall only checks the platform binary, which comes from an optional dependency.
+  esbuild: false
   # Optional native watcher for gulp watch; chokidar works without it.
   fsevents: false
