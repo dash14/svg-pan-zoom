@@ -1,18 +1,14 @@
 {
   "compilerOptions": {
-    "module": "UMD",
-    "moduleResolution": "node",
-    "target": "es5",
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "target": "es2020",
     "diagnostics": true,
     "noEmit": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": false,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "./",
-    "typeRoots": [
-      "./"
-    ],
     "types": []
   },
   "files": [

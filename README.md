@@ -55,10 +55,10 @@ Best way to contribute is to create a pull request. In order to create a pull re
   * Run `pnpm install`
   * Running `pnpm start` will listen for source files changes (in `src` folder) and will automatically build distribution files
   * Running `pnpm run build` will build distribution files
-  * Running `pnpm exec gulp check` will check syntax and automatically fix some errors
+  * Running `pnpm run format` will format the source files
   * Running `pnpm test` will type-check `dist/svg-pan-zoom.d.ts` and run the tests in headless Chromium. Install Chromium once with `pnpm exec playwright install --only-shell chromium`
 * Implement the change using `pnpm start` or `pnpm run build`
-* After change is done test it with `pnpm exec gulp check` and `pnpm test`
+* After change is done format it with `pnpm run format` and test it with `pnpm test`
 * Commit only meaningful changes, and commit the rebuilt distribution files (`dist` folder) with them. CI fails when `dist` differs from what the source builds to
 * Push your changes into your fork
 * Create a pull request
@@ -478,7 +478,7 @@ delete panZoomTiger;
 How to test
 -----------
 
-Before committing you should check your code style by running `pnpm exec gulp check`.
+Before committing you should format your code by running `pnpm run format`.
 
 If you made a change then first build the library. Run `pnpm run server` and open http://localhost:3001/tests/index.html in your browser. All tests should pass.
 

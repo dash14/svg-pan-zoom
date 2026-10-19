@@ -19,7 +19,7 @@ permissions: {}
 
 jobs:
   test:
-    name: Lint, build and test
+    name: Format, build and test
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -64,11 +64,8 @@ jobs:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: ${{ steps.pnpm-cache.outputs.cache-primary-key }}
 
-      # gulp check fixes what it can, so a fix left uncommitted shows up as a diff.
-      - name: Lint
-        run: |
-          pnpm exec gulp check
-          git diff --exit-code
+      - name: Check formatting
+        run: pnpm run format:check
 
       - name: Build
         run: pnpm run build
