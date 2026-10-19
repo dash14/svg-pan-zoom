@@ -482,7 +482,7 @@ How to test
 
 Before committing you should check your code style by running `gulp check`.
 
-If you made a change then first build the library. Open `./tests/index.html` in your browser. All tests should pass.
+If you made a change then first build the library. Run `pnpm run server` and open http://localhost:3001/tests/index.html in your browser. All tests should pass.
 
 To run them in headless Chromium instead, run `pnpm test`.
 

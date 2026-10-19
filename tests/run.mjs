@@ -18,18 +18,20 @@ const browser = await chromium.launch();
 try {
   const page = await browser.newPage();
   await page.route(`${origin}/**`, async (route) => {
+    let path, body;
     try {
       // normalize() keeps a decoded "../" from reaching outside the repository.
-      const path = normalize(
+      path = normalize(
         decodeURIComponent(new URL(route.request().url()).pathname)
       );
-      await route.fulfill({
-        body: await readFile(join(root, path)),
-        contentType: contentTypes[extname(path)] ?? "application/octet-stream",
-      });
+      body = await readFile(join(root, path));
     } catch {
-      await route.fulfill({ status: 404 });
+      return route.fulfill({ status: 404 });
     }
+    await route.fulfill({
+      body,
+      contentType: contentTypes[extname(path)] ?? "application/octet-stream",
+    });
   });
   page.on("pageerror", (error) => {
     console.error(error);
@@ -38,7 +40,15 @@ try {
 
   await page.goto(`${origin}/tests/index.html`);
   // QUnit adds the counts only once every test has finished.
-  await page.waitForSelector("#qunit-testresult .total", { state: "attached" });
+  try {
+    await page.waitForSelector("#qunit-testresult .total", {
+      state: "attached",
+    });
+  } catch (error) {
+    // A test that never resumes stalls QUnit, whose status names that test.
+    console.error(await page.locator("#qunit-testresult").innerText());
+    throw error;
+  }
 
   const result = await page.evaluate(() => {
     const count = (selector) =>
@@ -46,7 +56,7 @@ try {
         document.querySelector(`#qunit-testresult ${selector}`).textContent
       );
     return {
-      summary: document.getElementById("qunit-testresult").textContent,
+      summary: document.getElementById("qunit-testresult").innerText,
       failed: count(".failed"),
       total: count(".total"),
       failures: [...document.querySelectorAll("#qunit-tests > li.fail")].map(
