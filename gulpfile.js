@@ -6,7 +6,6 @@ var gulp = require("gulp"),
   browserify = require("browserify"),
   source = require("vinyl-source-stream"),
   rename = require("gulp-rename"),
-  qunit = require("gulp-qunit"),
   eslint = require("gulp-eslint"),
   gulpIf = require("gulp-if"),
   header = require("gulp-header"),
@@ -52,13 +51,6 @@ function watch() {
 }
 
 /**
- * Test task
- */
-function test() {
-  return gulp.src("./tests/index.html").pipe(qunit());
-}
-
-/**
  * Check
  */
 function check() {
@@ -88,13 +80,12 @@ function check() {
 
 exports.compile = compile;
 exports.watch = watch;
-exports.test = test;
 exports.check = check;
 
 /**
  * Build
  */
-exports.build = gulp.series([check, compile, test]);
+exports.build = gulp.series([check, compile]);
 
 /**
  * Default task

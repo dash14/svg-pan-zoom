@@ -83,10 +83,9 @@ jobs:
         run: pnpm exec gulp compile
 
       - name: Test
-        env:
-          # PhantomJS bundles an old OpenSSL that fails to load the runner's OpenSSL 3 config.
-          OPENSSL_CONF: /dev/null
-        run: pnpm test
+        run: |
+          pnpm exec playwright install --with-deps chromium
+          pnpm test
 
       # dist/ is committed and published as is, so it must be what this source builds to.
       # Runs right before packing, so that nothing run since the build can change what is packed.

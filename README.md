@@ -57,10 +57,10 @@ Best way to contribute is to create a pull request. In order to create a pull re
   * Running `gulp` will listen for source files changes (in `src` folder) and will automatically build distribution files
   * Running `gulp compile` will compile source files
   * Running `gulp check` will check syntax and automatically fix some errors
-  * Running `gulp test` will run tests
-  * Running `gulp build` will check, compile and test in one go
+  * Running `gulp build` will check and compile in one go
+  * Running `pnpm test` will type-check `dist/svg-pan-zoom.d.ts` and run the tests in headless Chromium. Install Chromium once with `pnpm exec playwright install chromium`
 * Implement the change using `gulp` or `gulp compile`
-* After change is done test it with `gulp check` and `gulp test`
+* After change is done test it with `gulp check` and `pnpm test`
 * Commit only meaningful changes, and commit the rebuilt distribution files (`dist` folder) with them. CI fails when `dist` differs from what the source builds to
 * Push your changes into your fork
 * Create a pull request
@@ -484,7 +484,7 @@ Before committing you should check your code style by running `gulp check`.
 
 If you made a change then first build the library. Open `./tests/index.html` in your browser. All tests should pass.
 
-If you have PhantomJS installed then you can run `gulp test`.
+To run them in headless Chromium instead, run `pnpm test`.
 
 Common Issues & FAQ
 -------------------
