@@ -58,10 +58,10 @@ Best way to contribute is to create a pull request. In order to create a pull re
   * Running `gulp compile` will compile source files
   * Running `gulp check` will check syntax and automatically fix some errors
   * Running `gulp test` will run tests
-  * Running `gulp build` will prepare the project for a new release
+  * Running `gulp build` will check, compile and test in one go
 * Implement the change using `gulp` or `gulp compile`
 * After change is done test it with `gulp check` and `gulp test`
-* Commit only meaningful changes. **Do not commit distribution files (`dist` folder)**. Distribution files are built only before a release
+* Commit only meaningful changes, and commit the rebuilt distribution files (`dist` folder) with them. CI fails when `dist` differs from what the source builds to
 * Push your changes into your fork
 * Create a pull request
 
