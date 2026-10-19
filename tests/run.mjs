@@ -18,10 +18,11 @@ const browser = await chromium.launch();
 try {
   const page = await browser.newPage();
   await page.route(`${origin}/**`, async (route) => {
-    const path = normalize(
-      decodeURIComponent(new URL(route.request().url()).pathname)
-    );
     try {
+      // normalize() keeps a decoded "../" from reaching outside the repository.
+      const path = normalize(
+        decodeURIComponent(new URL(route.request().url()).pathname)
+      );
       await route.fulfill({
         body: await readFile(join(root, path)),
         contentType: contentTypes[extname(path)] ?? "application/octet-stream",
@@ -30,14 +31,14 @@ try {
       await route.fulfill({ status: 404 });
     }
   });
-  page.on("pageerror", (error) => console.error(error));
+  page.on("pageerror", (error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
 
   await page.goto(`${origin}/tests/index.html`);
-  await page.waitForFunction(() =>
-    /completed/.test(
-      document.getElementById("qunit-testresult")?.textContent ?? ""
-    )
-  );
+  // QUnit adds the counts only once every test has finished.
+  await page.waitForSelector("#qunit-testresult .total", { state: "attached" });
 
   const result = await page.evaluate(() => {
     const count = (selector) =>
