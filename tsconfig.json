@@ -2,12 +2,8 @@
   "compilerOptions": {
     "module": "preserve",
     "lib": ["es5", "dom"],
-    "diagnostics": true,
     "noEmit": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "strictNullChecks": false,
-    "forceConsistentCasingInFileNames": true
+    "strictNullChecks": false
   },
   "files": [
     "dist/svg-pan-zoom.d.ts",
