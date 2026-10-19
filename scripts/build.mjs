@@ -25,8 +25,11 @@ const builds = [
 if (process.argv.includes("--watch")) {
   for (const build of builds) await (await esbuild.context(build)).watch();
 } else {
-  // esbuild has already logged the errors, so only the exit code is left to set.
-  await Promise.all(builds.map((build) => esbuild.build(build))).catch(() => {
-    process.exitCode = 1;
-  });
+  await Promise.all(builds.map((build) => esbuild.build(build))).catch(
+    (error) => {
+      // esbuild logs build errors itself; anything else would go unreported.
+      if (!error.errors) console.error(error);
+      process.exitCode = 1;
+    }
+  );
 }
