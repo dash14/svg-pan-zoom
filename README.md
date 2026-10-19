@@ -58,7 +58,7 @@ Best way to contribute is to create a pull request. In order to create a pull re
   * Running `gulp compile` will compile source files
   * Running `gulp check` will check syntax and automatically fix some errors
   * Running `gulp build` will check and compile in one go
-  * Running `pnpm test` will type-check `dist/svg-pan-zoom.d.ts` and run the tests in headless Chromium. Install Chromium once with `pnpm exec playwright install chromium`
+  * Running `pnpm test` will type-check `dist/svg-pan-zoom.d.ts` and run the tests in headless Chromium. Install Chromium once with `pnpm exec playwright install --only-shell chromium`
 * Implement the change using `gulp` or `gulp compile`
 * After change is done test it with `gulp check` and `pnpm test`
 * Commit only meaningful changes, and commit the rebuilt distribution files (`dist` folder) with them. CI fails when `dist` differs from what the source builds to

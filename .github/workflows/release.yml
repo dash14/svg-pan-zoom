@@ -84,7 +84,7 @@ jobs:
 
       - name: Test
         run: |
-          pnpm exec playwright install --with-deps chromium
+          pnpm exec playwright install --with-deps --only-shell chromium
           pnpm test
 
       # dist/ is committed and published as is, so it must be what this source builds to.

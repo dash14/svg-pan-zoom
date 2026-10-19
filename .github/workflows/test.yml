@@ -87,7 +87,7 @@ jobs:
 
       - name: Test
         run: |
-          pnpm exec playwright install --with-deps chromium
+          pnpm exec playwright install --with-deps --only-shell chromium
           pnpm test
 
   # A single, stably named job for branch protection to require.

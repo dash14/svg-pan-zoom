@@ -46,7 +46,10 @@ try {
     });
   } catch (error) {
     // A test that never resumes stalls QUnit, whose status names that test.
-    console.error(await page.locator("#qunit-testresult").innerText());
+    const status = await page.evaluate(
+      () => document.getElementById("qunit-testresult")?.innerText
+    );
+    if (status) console.error(status);
     throw error;
   }
 
