@@ -6,7 +6,7 @@ import * as esbuild from "esbuild";
 const pkg = JSON.parse(
   await readFile(new URL("../package.json", import.meta.url), "utf8")
 );
-const banner = `// svg-pan-zoom v${pkg.version}\n// https://github.com/ariutta/svg-pan-zoom`;
+const banner = `// svg-pan-zoom v${pkg.version}\n// https://github.com/dash14/svg-pan-zoom`;
 
 const options = {
   absWorkingDir: fileURLToPath(new URL("..", import.meta.url)),

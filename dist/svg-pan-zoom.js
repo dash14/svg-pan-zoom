@@ -1,5 +1,5 @@
 // svg-pan-zoom v3.6.10-beta.0
-// https://github.com/ariutta/svg-pan-zoom
+// https://github.com/dash14/svg-pan-zoom
 (function() {
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __commonJS = function(cb, mod) {
