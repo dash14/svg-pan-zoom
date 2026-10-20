@@ -32,9 +32,7 @@ Support
 
 ### Bugs and Issues
 
-This fork does not take issues. Report a problem with it, or with how v-network-graph uses it, in [v-network-graph's issues](https://github.com/dash14/v-network-graph/issues). For the original library, see its [issues](https://github.com/bumbu/svg-pan-zoom/issues).
-
-When reporting, **please provide a reproducible example**, and mention the library version and your browser name, version and operating system.
+This fork does not take issues; report problems in [v-network-graph's issues](https://github.com/dash14/v-network-graph/issues) with a reproducible example, the library version, and your browser and OS.
 
 ### Solved Bugs and Implemented Features
 
@@ -62,7 +60,7 @@ Best way to contribute is to create a pull request. In order to create a pull re
 How To Use
 ----------
 
-Install the package with npm and import it (see [Use with a bundler](#use-with-a-bundler)), or load `dist/svg-pan-zoom.min.js` from the package with a `<script>` tag. Then call the init method:
+Import the package (see [Use with a bundler](#use-with-a-bundler)) or load its `dist/svg-pan-zoom.min.js` with a `<script>` tag, then call the init method:
 
 ```js
 var panZoomTiger = svgPanZoom('#demo-tiger');
@@ -217,9 +215,9 @@ If you want to listen for user interaction events from a child SVG element then 
 Use with a bundler
 ------------------
 
-To use with a bundler such as Vite, webpack or browserify, follow these steps:
-* Add the package as node module `npm install @dash14/svg-pan-zoom`
-* Require _svg-pan-zoom_ in your source file `svgPanZoom = require('@dash14/svg-pan-zoom')`, or import it with `import svgPanZoom from '@dash14/svg-pan-zoom'`
+To use with a bundler such as Vite, webpack or browserify:
+* Install the package: `npm install @dash14/svg-pan-zoom`
+* Import it: `import svgPanZoom from '@dash14/svg-pan-zoom'`, or `svgPanZoom = require('@dash14/svg-pan-zoom')`
 * Use in the same way as you would do with global svgPanZoom: `instance = svgPanZoom('#demo-tiger')`
 
 Use with Require.js (or other AMD libraries)
