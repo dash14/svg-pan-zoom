@@ -40,10 +40,6 @@ When reporting, **please provide a reproducible example**, and mention the libra
 
 If you solved a bug or implemented a feature that may be useful for others then you're welcome to create a pull request.
 
-### Questions, How To's, Need Help
-
-If you have any other type of questions, problems, your code is not working or you want to critique the library - you can use StackOverflow. Just tag your question with [`svgpanzoom`](http://stackoverflow.com/questions/tagged/svgpanzoom).
-
 ### Contributions/Pull Requests
 
 Best way to contribute is to create a pull request. In order to create a pull request:
@@ -63,30 +59,10 @@ Best way to contribute is to create a pull request. In order to create a pull re
 * Push your changes into your fork
 * Create a pull request
 
-Demos
------
-Pan and zoom the SVG tiger on the original project's GitHub Pages (the same demos are in the [demo](demo) folder):
-* [Single Inline SVG](http://bumbu.github.io/svg-pan-zoom/demo/inline.html)
-* [Multiple Inline SVGs](http://bumbu.github.io/svg-pan-zoom/demo/multi-instance.html)
-* [SVG Inserted with `Embed` Element](http://bumbu.github.io/svg-pan-zoom/demo/embed.html)
-* [SVG Inserted with `Object` Element](http://bumbu.github.io/svg-pan-zoom/demo/object.html)
-* [SVG Inserted with `Img` Element](http://bumbu.github.io/svg-pan-zoom/demo/img.html) (These cannot be panned/zoomed.)
-* [SVG With custom controls](http://bumbu.github.io/svg-pan-zoom/demo/custom-controls.html)
-* [Resize SVG container on document resize](http://bumbu.github.io/svg-pan-zoom/demo/resize.html)
-* [Two SVGs with synchronized zooming and panning](http://bumbu.github.io/svg-pan-zoom/demo/sinchronized.html)
-* [Custom events: Touch events support: pan, double tap, pinch](http://bumbu.github.io/svg-pan-zoom/demo/mobile.html)
-* [Custom events: Enable zooming only on click, disable on mouse out](http://bumbu.github.io/svg-pan-zoom/demo/custom-event-handlers.html)
-* [Limit pan](http://bumbu.github.io/svg-pan-zoom/demo/limit-pan.html)
-* [Dynamic SVG load](http://bumbu.github.io/svg-pan-zoom/demo/dynamic-load.html)
-* [Using Require.js](http://bumbu.github.io/svg-pan-zoom/demo/require.html)
-* [Pan animation](http://bumbu.github.io/svg-pan-zoom/demo/simple-animation.html)
-* [Zooming just one SVG layer](http://bumbu.github.io/svg-pan-zoom/demo/layers.html)
-* [Thumbnail Viewer](http://bumbu.github.io/svg-pan-zoom/demo/thumbnailViewer.html)
-
 How To Use
 ----------
 
-Reference the [svg-pan-zoom.min.js file](dist/svg-pan-zoom.min.js) from your HTML document (see [CDN](#cdn)), or install the package with npm (see [Use with a bundler](#use-with-a-bundler)). Then call the init method:
+Install the package with npm and import it (see [Use with a bundler](#use-with-a-bundler)), or load `dist/svg-pan-zoom.min.js` from the package with a `<script>` tag. Then call the init method:
 
 ```js
 var panZoomTiger = svgPanZoom('#demo-tiger');
@@ -527,12 +503,6 @@ Supported Browsers
 * Safari
 * Opera
 * Internet Explorer 9+ _(works badly if viewBox attribute is set)_
-
-CDN
----
-You can use [jsDelivr](https://www.jsdelivr.com/) as a CDN, which serves the files published to npm.
-
-For example use `https://cdn.jsdelivr.net/npm/@dash14/svg-pan-zoom@3.6.9/dist/svg-pan-zoom.min.js` to load version `3.6.9`.
 
 Related Work
 ------------
