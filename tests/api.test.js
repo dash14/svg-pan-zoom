@@ -498,8 +498,10 @@ describe("on updated CTM", () => {
 
     instance.panBy({ x: 100, y: 300 });
 
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
     // Called on the frame that initialization requested and on the one panBy requested.
-    await vi.waitFor(() => expect(onUpdatedCTM).toHaveBeenCalledTimes(2));
+    expect(onUpdatedCTM).toHaveBeenCalledTimes(2);
   });
 });
 

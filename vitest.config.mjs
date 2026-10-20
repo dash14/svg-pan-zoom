@@ -9,6 +9,8 @@ export default defineConfig({
       provider: playwright(),
       headless: true,
       instances: [{ browser: "chromium" }],
+      // Wide enough for the 700x300 fixture, so that its whole area can be pointed at.
+      viewport: { width: 1280, height: 720 },
     },
   },
 });
