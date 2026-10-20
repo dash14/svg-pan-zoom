@@ -459,9 +459,7 @@ How to test
 
 Before committing you should format your code by running `pnpm run format`.
 
-If you made a change then first build the library. Run `pnpm run server` and open http://localhost:3001/tests/index.html in your browser. All tests should pass.
-
-To run them in headless Chromium instead, run `pnpm test`.
+The tests run against `dist/`, so build the library with `pnpm run build` first. Then run `pnpm test`, which runs them in headless Chromium; install it once with `pnpm exec playwright install --only-shell chromium`.
 
 Common Issues & FAQ
 -------------------
