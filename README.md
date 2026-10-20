@@ -57,6 +57,11 @@ Best way to contribute is to create a pull request. In order to create a pull re
 * Push your changes into your fork
 * Create a pull request
 
+Demos
+-----
+
+The examples in [demo](demo) run from a clone: start `pnpm run server` and open http://localhost:3001/demo/.
+
 How To Use
 ----------
 
@@ -70,8 +75,6 @@ var panZoomTiger = svgPanZoom(svgElement)
 ```
 
 First argument to function should be a CSS selector of SVG element or a DOM Element.
-
-The examples in [demo](demo) run from a clone: start `pnpm run server` and open http://localhost:3001/demo/.
 
 If you want to override the defaults, you can optionally specify one or more arguments:
 
