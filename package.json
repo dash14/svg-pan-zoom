@@ -28,7 +28,8 @@
     "start": "node scripts/build.mjs --watch",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "test": "tsc && node tests/run.mjs",
+    "test": "tsc && vitest run",
+    "test:headed": "vitest --browser.headless=false",
     "build": "node scripts/build.mjs",
     "server": "node server.js"
   },
@@ -69,10 +70,12 @@
     "zoom"
   ],
   "devDependencies": {
+    "@vitest/browser-playwright": "^5.0.3",
     "esbuild": "^0.28.2",
     "oxfmt": "^0.71.0",
     "playwright": "^1.63.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.3"
   },
   "publishConfig": {
     "access": "public"
