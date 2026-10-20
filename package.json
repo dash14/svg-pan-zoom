@@ -29,6 +29,7 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "test": "tsc && vitest run",
+    "test:headed": "vitest --browser.headless=false",
     "build": "node scripts/build.mjs",
     "server": "node server.js"
   },

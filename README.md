@@ -461,6 +461,8 @@ Before committing you should format your code by running `pnpm run format`.
 
 The tests run against `dist/`, so build the library with `pnpm run build` first. Then run `pnpm test`, which runs them in headless Chromium; install it once with `pnpm exec playwright install --only-shell chromium`.
 
+To watch the tests in a browser window while debugging, run `pnpm run test:headed`. It needs the full Chromium: `pnpm exec playwright install chromium`.
+
 Common Issues & FAQ
 -------------------
 
