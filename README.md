@@ -7,6 +7,12 @@ The following changes have been made from the original:
 * Do not access `window` and `document` when exporting the module.
 * Specify `{passive: false}` explicitly to the event listeners to prevent warnings.
 
+It is published to npm as [`@dash14/svg-pan-zoom`](https://www.npmjs.com/package/@dash14/svg-pan-zoom):
+
+```sh
+npm install @dash14/svg-pan-zoom
+```
+
 ---
 
 ![svg-pan-zoom logo](./svg-pan-zoom-logo.png)
@@ -21,20 +27,14 @@ Simple pan/zoom solution for SVGs in HTML. It adds events listeners for mouse sc
 
 It works cross-browser and supports both inline SVGs and SVGs in HTML `object` or `embed` elements.
 
-> If you're looking for version 2.3.x you can find it in [v2.3.x branch](https://github.com/ariutta/svg-pan-zoom/tree/v2.3.x)
-
 Support
 -------
 
 ### Bugs and Issues
 
-If you found a bug or have a suggestion first check if there is a similar [open](https://github.com/ariutta/svg-pan-zoom/issues) or [closed](https://github.com/ariutta/svg-pan-zoom/issues?q=is%3Aissue+is%3Aclosed) issue. If there are none then create a new one.
+This fork does not take issues. Report a problem with it, or with how v-network-graph uses it, in [v-network-graph's issues](https://github.com/dash14/v-network-graph/issues). For the original library, see its [issues](https://github.com/bumbu/svg-pan-zoom/issues).
 
-When opening a new issue **please provide a reproducible example**:
-- Share it so we can get directly to the problem. You can use [this starter jsfiddle setup](http://jsfiddle.net/bumbu/167usffr/) to provide your example. Or upload your own [jsfiddle.net](http://jsfiddle.net) (or any other live) example.
-- Mention your library version (located in library file in header)
-- Mention your browser name, version and operating system
-- Mention any other important for debug details
+When reporting, **please provide a reproducible example**, and mention the library version and your browser name, version and operating system.
 
 ### Solved Bugs and Implemented Features
 
@@ -65,7 +65,7 @@ Best way to contribute is to create a pull request. In order to create a pull re
 
 Demos
 -----
-Pan and zoom the SVG tiger on github pages:
+Pan and zoom the SVG tiger on the original project's GitHub Pages (the same demos are in the [demo](demo) folder):
 * [Single Inline SVG](http://bumbu.github.io/svg-pan-zoom/demo/inline.html)
 * [Multiple Inline SVGs](http://bumbu.github.io/svg-pan-zoom/demo/multi-instance.html)
 * [SVG Inserted with `Embed` Element](http://bumbu.github.io/svg-pan-zoom/demo/embed.html)
@@ -86,7 +86,7 @@ Pan and zoom the SVG tiger on github pages:
 How To Use
 ----------
 
-Reference the [svg-pan-zoom.js file](http://ariutta.github.io/svg-pan-zoom/dist/svg-pan-zoom.min.js) from your HTML document. Then call the init method:
+Reference the [svg-pan-zoom.min.js file](dist/svg-pan-zoom.min.js) from your HTML document (see [CDN](#cdn)), or install the package with npm (see [Use with a bundler](#use-with-a-bundler)). Then call the init method:
 
 ```js
 var panZoomTiger = svgPanZoom('#demo-tiger');
@@ -236,20 +236,20 @@ svgPanZoom('#demo-tiger', {
 Listening for pan/zoom events on a child SVG element
 ----------------------------------------------------
 
-If you want to listen for user interaction events from a child SVG element then use `eventsListenerElement` option. An example is available in [demo/layers.html](http://ariutta.github.io/svg-pan-zoom/demo/layers.html).
+If you want to listen for user interaction events from a child SVG element then use `eventsListenerElement` option. An example is available in [demo/layers.html](demo/layers.html).
 
-Use with browserify
--------------------
+Use with a bundler
+------------------
 
-To use with browserify, follow these steps:
-* Add the package as node module `npm install --save ariutta/svg-pan-zoom`
-* Require _svg-pan-zoom_ in your source file `svgPanZoom = require('svg-pan-zoom')`
+To use with a bundler such as Vite, webpack or browserify, follow these steps:
+* Add the package as node module `npm install @dash14/svg-pan-zoom`
+* Require _svg-pan-zoom_ in your source file `svgPanZoom = require('@dash14/svg-pan-zoom')`, or import it with `import svgPanZoom from '@dash14/svg-pan-zoom'`
 * Use in the same way as you would do with global svgPanZoom: `instance = svgPanZoom('#demo-tiger')`
 
 Use with Require.js (or other AMD libraries)
 -------------------
 
-An example of how to load library using Require.js is available in [demo/require.html](http://ariutta.github.io/svg-pan-zoom/demo/require.html)
+An example of how to load library using Require.js is available in [demo/require.html](demo/require.html)
 
 Custom events support
 ---------------------
@@ -301,14 +301,14 @@ var options = {
 svgPanZoom('#mobile-svg', options);
 ```
 
-You may find an example that adds support for Hammer.js pan, pinch and doubletap in demo/mobile.html
+You may find an example that adds support for Hammer.js pan, pinch and doubletap in [demo/mobile.html](demo/mobile.html)
 
 Keep content visible/Limit pan
 ------------------------------
 
 You may want to keep SVG content visible by not allowing panning over SVG borders.
 
-To do so you may prevent or alter panning from `beforePan` callback. For more details take a look at `demo/limit-pan.html` example.
+To do so you may prevent or alter panning from `beforePan` callback. For more details take a look at [demo/limit-pan.html](demo/limit-pan.html) example.
 
 Public API
 ----------
@@ -493,32 +493,32 @@ Because the library removes `viewBox` attribute from the SVG element - you may e
 
 ### Calling library methods throw errors when SVG is hidden
 
-This library does not support working with SVGs that are hidden as some browsers detach child documents from the DOM when those are hidden. See [#279](https://github.com/ariutta/svg-pan-zoom/issues/279) for more details.
+This library does not support working with SVGs that are hidden as some browsers detach child documents from the DOM when those are hidden. See [bumbu/svg-pan-zoom#279](https://github.com/bumbu/svg-pan-zoom/issues/279) for more details.
 
 ### Performance issues on initialization
 
-If performance is bad only on initialization of the library, then consider wrapping all SVG's child elements into a `<g>` beforehand. This way the library will not have to create it and move all children into it (which is the root cause of the issue). See [#146 comment](https://github.com/ariutta/svg-pan-zoom/issues/146#issuecomment-137873358).
+If performance is bad only on initialization of the library, then consider wrapping all SVG's child elements into a `<g>` beforehand. This way the library will not have to create it and move all children into it (which is the root cause of the issue). See [bumbu/svg-pan-zoom#146 comment](https://github.com/bumbu/svg-pan-zoom/issues/146#issuecomment-137873358).
 
 ### Performance issues while panning/zooming
 
 Most often those are caused by big SVG files. And in those cases it's browsers not being able to handle those SVGs fast enough.
-See [#277](https://github.com/ariutta/svg-pan-zoom/issues/277) for more details.
+See [bumbu/svg-pan-zoom#277](https://github.com/bumbu/svg-pan-zoom/issues/277) for more details.
 
 ### How to limit zooming/panning
 
 For zooming there is `minZoom` and `maxZoom` zoom config options.
 
-For panning and custom zoom experiences take a look at [limit-pan example](http://ariutta.github.io/svg-pan-zoom/demo/limit-pan.html).
+For panning and custom zoom experiences take a look at [limit-pan example](demo/limit-pan.html).
 
 ### How to add animations
 
-Currently there're 2 ways of doing animation: via CSS or programatically - see #101 for more details. 
+Currently there're 2 ways of doing animation: via CSS or programatically - see [bumbu/svg-pan-zoom#101](https://github.com/bumbu/svg-pan-zoom/issues/101) for more details.
 
 ### Errors for `object`/`embed` or dynamically loaded SVGs
 
 You have to ensure that the SVG is loaded and available in DOM before initializing the library.
 
-Check [dymanic-load demo](http://ariutta.github.io/svg-pan-zoom/demo/dynamic-load.html).
+Check [dynamic-load demo](demo/dynamic-load.html).
 
 Supported Browsers
 ------------------
@@ -530,11 +530,9 @@ Supported Browsers
 
 CDN
 ---
-You can use (jsdelivr)[http://www.jsdelivr.com/] as a CDN. It supports automatic pulling from NPM and GitHub.
+You can use [jsDelivr](https://www.jsdelivr.com/) as a CDN, which serves the files published to npm.
 
-For example use `https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.5.0/dist/svg-pan-zoom.min.js` to load version `3.5.0`.
-
-For more usage examples check (jsdelivr usage)[https://github.com/jsdelivr/jsdelivr#usage].
+For example use `https://cdn.jsdelivr.net/npm/@dash14/svg-pan-zoom@3.6.9/dist/svg-pan-zoom.min.js` to load version `3.6.9`.
 
 Related Work
 ------------
