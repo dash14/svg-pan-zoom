@@ -143,7 +143,7 @@ export default function thumbnailViewer(options){
             , rightLimit = sizes.width - gutterWidth - (sizes.viewBox.x * sizes.realZoom)
             , topLimit = -((sizes.viewBox.y + sizes.viewBox.height) * sizes.realZoom) + gutterHeight
             , bottomLimit = sizes.height - gutterHeight - (sizes.viewBox.y * sizes.realZoom);
-            customPan = {};
+            var customPan = {};
             customPan.x = Math.max(leftLimit, Math.min(rightLimit, newPan.x));
             customPan.y = Math.max(topLimit, Math.min(bottomLimit, newPan.y));
             return customPan;
