@@ -1,6 +1,6 @@
-var SvgUtils = require("./svg-utilities");
+import SvgUtils from "./svg-utilities.js";
 
-module.exports = {
+export default {
   enable: function (instance) {
     // Select (and create if necessary) defs
     var defs = instance.svg.querySelector("defs");

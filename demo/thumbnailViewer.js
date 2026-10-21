@@ -1,4 +1,6 @@
-var thumbnailViewer = function(options){
+import svgPanZoom from "../dist/svg-pan-zoom.js";
+
+export default function thumbnailViewer(options){
 
     var getSVGDocument = function(objectElem){
         var svgDoc = objectElem.contentDocument;
@@ -183,5 +185,4 @@ var thumbnailViewer = function(options){
         }
 
     }, false);
-};
-
+}

@@ -64,10 +64,8 @@
       <embed id="thumbView" type="image/svg+xml" src="tiger.svg" class="thumbViewClass"/>
     </div>
 
-    <script src="../dist/svg-pan-zoom.js" type="text/javascript" ></script>
-    <script src="./thumbnailViewer.js" type="text/javascript" ></script>
-
-    <script type="text/javascript">
+    <script type="module">
+      import thumbnailViewer from "./thumbnailViewer.js";
       thumbnailViewer({mainViewId: 'mainView',thumbViewId: 'thumbView'});
     </script>
   </body>

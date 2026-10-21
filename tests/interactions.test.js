@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { cdp, userEvent } from "vitest/browser";
+// The published bundle, which the package exports.
+import svgPanZoom from "../dist/svg-pan-zoom.js";
 import { mountFixture } from "./fixture.js";
 
 let svg, instance;

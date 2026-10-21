@@ -1,8 +1,8 @@
-var Wheel = require("./uniwheel"),
-  ControlIcons = require("./control-icons"),
-  Utils = require("./utilities"),
-  SvgUtils = require("./svg-utilities"),
-  ShadowViewport = require("./shadow-viewport");
+import Wheel from "./uniwheel.js";
+import ControlIcons from "./control-icons.js";
+import Utils from "./utilities.js";
+import SvgUtils from "./svg-utilities.js";
+import ShadowViewport from "./shadow-viewport.js";
 
 var SvgPanZoom = function (svg, options) {
   this.init(svg, options);
@@ -1081,4 +1081,4 @@ var svgPanZoom = function (elementOrSelector, options) {
   }
 };
 
-module.exports = svgPanZoom;
+export default svgPanZoom;

@@ -2,9 +2,9 @@
 // A unified cross browser mouse wheel event handler
 // https://github.com/teemualap/uniwheel
 
-var Utils = require("./utilities");
+import Utils from "./utilities.js";
 
-module.exports = (function() {
+export default (function() {
   //Full details: https://developer.mozilla.org/en-US/docs/Web/Reference/Events/wheel
 
   var prefix = "",

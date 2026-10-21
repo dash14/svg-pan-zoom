@@ -1,4 +1,4 @@
-// Bundles src/ into dist/svg-pan-zoom.js and dist/svg-pan-zoom.min.js. Pass --watch to rebuild on change.
+// Bundles src/ into the ES module dist/svg-pan-zoom.js. Pass --watch to rebuild on change.
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import * as esbuild from "esbuild";
@@ -10,26 +10,20 @@ const banner = `// svg-pan-zoom v${pkg.version}\n// https://github.com/dash14/sv
 
 const options = {
   absWorkingDir: fileURLToPath(new URL("..", import.meta.url)),
-  entryPoints: ["src/stand-alone.js"],
+  entryPoints: ["src/svg-pan-zoom.js"],
+  outfile: "dist/svg-pan-zoom.js",
   bundle: true,
-  format: "iife",
+  format: "esm",
   target: "es5",
   banner: { js: banner },
   logLevel: "info",
 };
-const builds = [
-  { ...options, outfile: "dist/svg-pan-zoom.js" },
-  { ...options, outfile: "dist/svg-pan-zoom.min.js", minify: true },
-];
-
 if (process.argv.includes("--watch")) {
-  for (const build of builds) await (await esbuild.context(build)).watch();
+  await (await esbuild.context(options)).watch();
 } else {
-  await Promise.all(builds.map((build) => esbuild.build(build))).catch(
-    (error) => {
-      // esbuild logs build errors itself; anything else would go unreported.
-      if (!error.errors) console.error(error);
-      process.exitCode = 1;
-    }
-  );
+  await esbuild.build(options).catch((error) => {
+    // esbuild logs build errors itself; anything else would go unreported.
+    if (!error.errors) console.error(error);
+    process.exitCode = 1;
+  });
 }

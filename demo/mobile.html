@@ -2,7 +2,6 @@
 <html>
   <head>
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
-    <script src="../dist/svg-pan-zoom.js"></script>
     <script src="../demo/hammer.js"></script>
   </head>
 
@@ -24,7 +23,9 @@
       </svg>
     </div>
 
-    <script>
+    <script type="module">
+      import svgPanZoom from "../dist/svg-pan-zoom.js";
+
       // Don't use window.onLoad like this in production, because it can only listen to one function.
       window.onload = function() {
         var eventsHandler;

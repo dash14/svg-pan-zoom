@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   /**
    * Get global this object
    *
