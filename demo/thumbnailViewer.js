@@ -124,7 +124,8 @@ export default function thumbnailViewer(options){
     };
 
     var mainViewObjectElem = document.getElementById(options.mainViewId);
-    mainViewObjectElem.addEventListener("load", function(){
+    // An embed can load before this module runs. The window's load event comes after both.
+    window.addEventListener("load", function(){
 
         var mainViewSVGDoc = getSVGDocument(mainViewObjectElem);
         if(options.onMainViewSVGLoaded){
@@ -164,7 +165,7 @@ export default function thumbnailViewer(options){
     }, false);
 
     var thumbViewObjectElem = document.getElementById(options.thumbViewId);
-    thumbViewObjectElem.addEventListener("load", function(){
+    window.addEventListener("load", function(){
 
         var thumbViewSVGDoc = getSVGDocument(thumbViewObjectElem);
         if(options.onThumbnailSVGLoaded){

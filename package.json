@@ -6,7 +6,8 @@
     ".": {
       "types": "./dist/svg-pan-zoom.d.ts",
       "default": "./dist/svg-pan-zoom.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "main": "dist/svg-pan-zoom.js",
   "types": "dist/svg-pan-zoom.d.ts",

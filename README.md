@@ -167,19 +167,20 @@ If you're embedding a remote file like this
 
 or you're rendering the SVG after the page loads then you'll have to call svgPanZoom library after your SVG is loaded.
 
-One way to do so is by listening to load event:
-```html
-<embed type="image/svg+xml" src="/path/to/my/file.svg" id="my-embed"/>
-
-<script type="module">
+One way to do so is by listening to the element's `load` event, added before the element can finish loading:
+```js
 import svgPanZoom from '@dash14/svg-pan-zoom';
 
-document.getElementById('my-embed').addEventListener('load', function(){
-  // Will get called after embed element was loaded
-  svgPanZoom(document.getElementById('my-embed'));
-})
-</script>
+var embed = document.createElement('embed');
+embed.type = 'image/svg+xml';
+embed.src = '/path/to/my/file.svg';
+embed.addEventListener('load', function(){
+  svgPanZoom(embed);
+});
+document.body.appendChild(embed);
 ```
+
+For an element written in the page's HTML, listen to the window's `load` event instead, which comes after the element has loaded.
 
 
 Using a custom viewport
