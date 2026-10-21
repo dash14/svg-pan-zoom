@@ -2,14 +2,15 @@
 <html>
 
   <head>
-    <script src="../dist/svg-pan-zoom.js"></script>
   </head>
 
   <body>
     <h1>Demo for svg-pan-zoom: SVG in HTML 'embed' element</h1>
     <embed id="demo-tiger" type="image/svg+xml" style="width: 500px; height: 500px; border:1px solid black; " src="tiger.svg" />
 
-    <script>
+    <script type="module">
+      import svgPanZoom from "../dist/svg-pan-zoom.js";
+
       // Don't use window.onLoad like this in production, because it can only listen to one function.
       window.onload = function() {
         svgPanZoom('#demo-tiger', {

@@ -1,4 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+// The published bundle, which the package exports.
+import svgPanZoom from "../dist/svg-pan-zoom.js";
 import { mountFixture } from "./fixture.js";
 
 const svgSelector = "#test-inline";

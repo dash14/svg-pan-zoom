@@ -6,6 +6,7 @@ The following changes have been made from the original:
 * Export type definitions in typescript.
 * Do not access `window` and `document` when exporting the module.
 * Specify `{passive: false}` explicitly to the event listeners to prevent warnings.
+* Ship only an ES module: no `<script>` global, AMD or CommonJS build.
 
 It is published to npm as [`@dash14/svg-pan-zoom`](https://www.npmjs.com/package/@dash14/svg-pan-zoom):
 
@@ -65,9 +66,11 @@ The examples in [demo](demo) run from a clone: start `pnpm run server` and open 
 How To Use
 ----------
 
-Import the package (see [Use with a bundler](#use-with-a-bundler)) or load its `dist/svg-pan-zoom.min.js` with a `<script>` tag, then call the init method:
+Import the package, then call the init method:
 
 ```js
+import svgPanZoom from '@dash14/svg-pan-zoom';
+
 var panZoomTiger = svgPanZoom('#demo-tiger');
 // or
 var svgElement = document.querySelector('#demo-tiger')
@@ -164,17 +167,20 @@ If you're embedding a remote file like this
 
 or you're rendering the SVG after the page loads then you'll have to call svgPanZoom library after your SVG is loaded.
 
-One way to do so is by listening to load event:
-```html
-<embed type="image/svg+xml" src="/path/to/my/file.svg" id="my-embed"/>
+One way to do so is by listening to the element's `load` event, added before the element can finish loading:
+```js
+import svgPanZoom from '@dash14/svg-pan-zoom';
 
-<script>
-document.getElementById('my-embed').addEventListener('load', function(){
-  // Will get called after embed element was loaded
-  svgPanZoom(document.getElementById('my-embed'));
-})
-</script>
+var embed = document.createElement('embed');
+embed.type = 'image/svg+xml';
+embed.src = '/path/to/my/file.svg';
+embed.addEventListener('load', function(){
+  svgPanZoom(embed);
+});
+document.body.appendChild(embed);
 ```
+
+For an element written in the page's HTML, listen to the window's `load` event instead, which comes after the element has loaded.
 
 
 Using a custom viewport
@@ -216,19 +222,6 @@ Listening for pan/zoom events on a child SVG element
 ----------------------------------------------------
 
 If you want to listen for user interaction events from a child SVG element then use `eventsListenerElement` option. An example is available in [demo/layers.html](demo/layers.html).
-
-Use with a bundler
-------------------
-
-To use with a bundler such as Vite, webpack or browserify:
-* Install the package: `npm install @dash14/svg-pan-zoom`
-* Import it: `import svgPanZoom from '@dash14/svg-pan-zoom'`, or `svgPanZoom = require('@dash14/svg-pan-zoom')`
-* Use in the same way as you would do with global svgPanZoom: `instance = svgPanZoom('#demo-tiger')`
-
-Use with Require.js (or other AMD libraries)
--------------------
-
-An example of how to load library using Require.js is available in [demo/require.html](demo/require.html)
 
 Custom events support
 ---------------------

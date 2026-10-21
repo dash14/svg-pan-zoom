@@ -1,4 +1,6 @@
-var thumbnailViewer = function(options){
+import svgPanZoom from "../dist/svg-pan-zoom.js";
+
+export default function thumbnailViewer(options){
 
     var getSVGDocument = function(objectElem){
         var svgDoc = objectElem.contentDocument;
@@ -122,7 +124,8 @@ var thumbnailViewer = function(options){
     };
 
     var mainViewObjectElem = document.getElementById(options.mainViewId);
-    mainViewObjectElem.addEventListener("load", function(){
+    // An embed can load before this module runs. The window's load event comes after both.
+    window.addEventListener("load", function(){
 
         var mainViewSVGDoc = getSVGDocument(mainViewObjectElem);
         if(options.onMainViewSVGLoaded){
@@ -140,7 +143,7 @@ var thumbnailViewer = function(options){
             , rightLimit = sizes.width - gutterWidth - (sizes.viewBox.x * sizes.realZoom)
             , topLimit = -((sizes.viewBox.y + sizes.viewBox.height) * sizes.realZoom) + gutterHeight
             , bottomLimit = sizes.height - gutterHeight - (sizes.viewBox.y * sizes.realZoom);
-            customPan = {};
+            var customPan = {};
             customPan.x = Math.max(leftLimit, Math.min(rightLimit, newPan.x));
             customPan.y = Math.max(topLimit, Math.min(bottomLimit, newPan.y));
             return customPan;
@@ -162,7 +165,7 @@ var thumbnailViewer = function(options){
     }, false);
 
     var thumbViewObjectElem = document.getElementById(options.thumbViewId);
-    thumbViewObjectElem.addEventListener("load", function(){
+    window.addEventListener("load", function(){
 
         var thumbViewSVGDoc = getSVGDocument(thumbViewObjectElem);
         if(options.onThumbnailSVGLoaded){
@@ -183,5 +186,4 @@ var thumbnailViewer = function(options){
         }
 
     }, false);
-};
-
+}

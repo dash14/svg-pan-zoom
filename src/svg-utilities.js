@@ -1,5 +1,6 @@
-var Utils = require("./utilities"),
-  _browser = "unknown";
+import Utils from "./utilities.js";
+
+var _browser = "unknown";
 
 // http://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser
 if (
@@ -10,7 +11,7 @@ if (
   _browser = "ie";
 }
 
-module.exports = {
+export default {
   svgNS: "http://www.w3.org/2000/svg",
   xmlNS: "http://www.w3.org/XML/1998/namespace",
   xmlnsNS: "http://www.w3.org/2000/xmlns/",

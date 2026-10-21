@@ -1,6 +1,3 @@
-// The bundle that the package's main entry and <script> users load. It sets the svgPanZoom global.
-import "../dist/svg-pan-zoom.js";
-
 // SVG size 700x300, viewport size 800x800
 export function mountFixture() {
   document.body.innerHTML = `

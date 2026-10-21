@@ -3,7 +3,6 @@
 
   <head>
     <title>Multi-instance</title>
-    <script src="../dist/svg-pan-zoom.js"></script>
   </head>
 
   <body>
@@ -2368,7 +2367,9 @@
         </g>
       </svg>
     </div>
-    <script>
+    <script type="module">
+      import svgPanZoom from "../dist/svg-pan-zoom.js";
+
       // Don't use window.onLoad like this in production, because it can only listen to one function.
       window.onload = function() {
         // Expose variable for testing purposes

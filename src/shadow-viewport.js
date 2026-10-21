@@ -1,5 +1,5 @@
-var SvgUtils = require("./svg-utilities"),
-  Utils = require("./utilities");
+import SvgUtils from "./svg-utilities.js";
+import Utils from "./utilities.js";
 
 var ShadowViewport = function (viewport, options) {
   this.init(viewport, options);
@@ -363,6 +363,6 @@ ShadowViewport.prototype.updateCTM = function () {
   }
 };
 
-module.exports = function (viewport, options) {
+export default function (viewport, options) {
   return new ShadowViewport(viewport, options);
-};
+}

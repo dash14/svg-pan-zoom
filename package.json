@@ -1,13 +1,18 @@
 {
   "name": "@dash14/svg-pan-zoom",
   "version": "3.6.10",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/svg-pan-zoom.d.ts",
+      "default": "./dist/svg-pan-zoom.js"
+    },
+    "./package.json": "./package.json"
+  },
   "main": "dist/svg-pan-zoom.js",
-  "module": "src/svg-pan-zoom.js",
   "types": "dist/svg-pan-zoom.d.ts",
-  "browser": "src/browserify.js",
   "files": [
-    "dist",
-    "src/*.js"
+    "dist"
   ],
   "license": "BSD-2-Clause",
   "description": "JavaScript library for panning and zooming an SVG image from the mouse, touches and programmatically.",
@@ -31,7 +36,7 @@
     "test": "tsc && vitest run",
     "test:headed": "vitest --browser.headless=false",
     "build": "node scripts/build.mjs",
-    "server": "node server.js"
+    "server": "node server.cjs"
   },
   "repository": {
     "type": "git",

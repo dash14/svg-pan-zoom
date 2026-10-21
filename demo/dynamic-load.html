@@ -2,7 +2,6 @@
 <html>
 
   <head>
-    <script src="../dist/svg-pan-zoom.js"></script>
     <script src="jquery.min.js"></script>
   </head>
 
@@ -11,7 +10,9 @@
     <div id="container"></div>
     <button id="swap" style="padding: 5px 20px; background: red; border: 1px solid #ff0404;">swap</button>
 
-    <script>
+    <script type="module">
+      import svgPanZoom from "../dist/svg-pan-zoom.js";
+
       // Don't use window.onLoad like this in production, because it can only listen to one function.
       $(function() {
         var lastEventListener = null;
