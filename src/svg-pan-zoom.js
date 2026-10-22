@@ -258,7 +258,7 @@ SvgPanZoom.prototype.handleMouseWheel = function (evt) {
     evt.preventDefault();
   }
 
-  var delta = evt.deltaY,
+  var delta = evt.deltaY || 0,
     timeDelta = Date.now() - this.lastMouseWheelEventTime,
     divider = 3 + Math.max(0, 30 - timeDelta);
 

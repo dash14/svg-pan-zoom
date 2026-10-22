@@ -41,7 +41,7 @@ export default {
     // Check if there is just one main group in SVG
     if (!viewport) {
       var childNodes = Array.prototype.slice
-        .call(svg.childNodes || svg.children)
+        .call(svg.childNodes)
         .filter(function (el) {
           return el.nodeName !== "defs" && el.nodeName !== "#text";
         });
@@ -65,12 +65,10 @@ export default {
       viewport.setAttribute("id", viewportId);
 
       var svgChildren = svg.childNodes;
-      if (svgChildren.length > 0) {
-        for (var i = svgChildren.length; i > 0; i--) {
-          // Move everything into viewport except defs
-          if (svgChildren[svgChildren.length - i].nodeName !== "defs") {
-            viewport.appendChild(svgChildren[svgChildren.length - i]);
-          }
+      for (var i = svgChildren.length; i > 0; i--) {
+        // Move everything into viewport except defs
+        if (svgChildren[svgChildren.length - i].nodeName !== "defs") {
+          viewport.appendChild(svgChildren[svgChildren.length - i]);
         }
       }
       svg.appendChild(viewport);
