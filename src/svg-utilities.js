@@ -1,16 +1,5 @@
 import Utils from "./utilities.js";
 
-var _browser = "unknown";
-
-// http://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser
-if (
-  /*@cc_on!@*/ false ||
-  (typeof document != "undefined" && !!document.documentMode)
-) {
-  // internet explorer
-  _browser = "ie";
-}
-
 export default {
   svgNS: "http://www.w3.org/2000/svg",
   xmlNS: "http://www.w3.org/XML/1998/namespace",
@@ -52,7 +41,7 @@ export default {
     // Check if there is just one main group in SVG
     if (!viewport) {
       var childNodes = Array.prototype.slice
-        .call(svg.childNodes || svg.children)
+        .call(svg.childNodes)
         .filter(function (el) {
           return el.nodeName !== "defs" && el.nodeName !== "#text";
         });
@@ -75,14 +64,11 @@ export default {
       viewport = document.createElementNS(this.svgNS, "g");
       viewport.setAttribute("id", viewportId);
 
-      // Internet Explorer (all versions?) can't use childNodes, but other browsers prefer (require?) using childNodes
-      var svgChildren = svg.childNodes || svg.children;
-      if (!!svgChildren && svgChildren.length > 0) {
-        for (var i = svgChildren.length; i > 0; i--) {
-          // Move everything into viewport except defs
-          if (svgChildren[svgChildren.length - i].nodeName !== "defs") {
-            viewport.appendChild(svgChildren[svgChildren.length - i]);
-          }
+      var svgChildren = svg.childNodes;
+      for (var i = svgChildren.length; i > 0; i--) {
+        // Move everything into viewport except defs
+        if (svgChildren[svgChildren.length - i].nodeName !== "defs") {
+          viewport.appendChild(svgChildren[svgChildren.length - i]);
         }
       }
       svg.appendChild(viewport);
@@ -114,7 +100,7 @@ export default {
     svg.setAttributeNS(this.xmlnsNS, "xmlns:xlink", this.xlinkNS);
     svg.setAttributeNS(this.xmlnsNS, "xmlns:ev", this.evNS);
 
-    // Needed for Internet Explorer, otherwise the viewport overflows
+    // Keep the zoomed viewport inside the SVG element
     if (svg.parentNode !== null) {
       var style = svg.getAttribute("style") || "";
       if (style.toLowerCase().indexOf("overflow") === -1) {
@@ -124,79 +110,29 @@ export default {
   },
 
   /**
-   * How long Internet Explorer takes to finish updating its display (ms).
-   */
-  internetExplorerRedisplayInterval: 300,
-
-  /**
-   * Forces the browser to redisplay all SVG elements that rely on an
-   * element defined in a 'defs' section. It works globally, for every
-   * available defs element on the page.
-   * The throttling is intentionally global.
-   *
-   * This is only needed for IE. It is as a hack to make markers (and 'use' elements?)
-   * visible after pan/zoom when there are multiple SVGs on the page.
-   * See bug report: https://connect.microsoft.com/IE/feedback/details/781964/
-   * also see svg-pan-zoom issue: https://github.com/ariutta/svg-pan-zoom/issues/62
-   */
-  refreshDefsGlobal: Utils.throttle(
-    function () {
-      var allDefs = document.querySelectorAll("defs");
-      var allDefsCount = allDefs.length;
-      for (var i = 0; i < allDefsCount; i++) {
-        var thisDefs = allDefs[i];
-        thisDefs.parentNode.insertBefore(thisDefs, thisDefs);
-      }
-    },
-    this ? this.internetExplorerRedisplayInterval : null
-  ),
-
-  /**
    * Sets the current transform matrix of an element
    *
    * @param {SVGElement} element
    * @param {SVGMatrix} matrix  CTM
-   * @param {SVGElement} defs
    */
-  setCTM: function (element, matrix, defs) {
-    var that = this,
-      s =
-        "matrix(" +
-        matrix.a +
-        "," +
-        matrix.b +
-        "," +
-        matrix.c +
-        "," +
-        matrix.d +
-        "," +
-        matrix.e +
-        "," +
-        matrix.f +
-        ")";
+  setCTM: function (element, matrix) {
+    var s =
+      "matrix(" +
+      matrix.a +
+      "," +
+      matrix.b +
+      "," +
+      matrix.c +
+      "," +
+      matrix.d +
+      "," +
+      matrix.e +
+      "," +
+      matrix.f +
+      ")";
 
     element.setAttributeNS(null, "transform", s);
-    if ("transform" in element.style) {
-      element.style.transform = s;
-    } else if ("-ms-transform" in element.style) {
-      element.style["-ms-transform"] = s;
-    } else if ("-webkit-transform" in element.style) {
-      element.style["-webkit-transform"] = s;
-    }
-
-    // IE has a bug that makes markers disappear on zoom (when the matrix "a" and/or "d" elements change)
-    // see http://stackoverflow.com/questions/17654578/svg-marker-does-not-work-in-ie9-10
-    // and http://srndolha.wordpress.com/2013/11/25/svg-line-markers-may-disappear-in-internet-explorer-11/
-    if (_browser === "ie" && !!defs) {
-      // this refresh is intended for redisplaying the SVG during zooming
-      defs.parentNode.insertBefore(defs, defs);
-      // this refresh is intended for redisplaying the other SVGs on a page when panning a given SVG
-      // it is also needed for the given SVG itself, on zoomEnd, if the SVG contains any markers that
-      // are located under any other element(s).
-      window.setTimeout(function () {
-        that.refreshDefsGlobal();
-      }, that.internetExplorerRedisplayInterval);
-    }
+    element.style.transform = s;
   },
 
   /**

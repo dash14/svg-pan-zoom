@@ -1,20 +1,5 @@
 export default {
   /**
-   * Get global this object
-   *
-   * @return {Object}        global this object
-   */
-  getGlobalThis: function () {
-    if (typeof globalThis !== "undefined") return globalThis;
-    if (typeof self !== "undefined") return self;
-    if (typeof window !== "undefined") return window;
-    if (typeof global !== "undefined") return global;
-    // Note: this might still return the wrong result!
-    if (typeof this !== "undefined") return this;
-    throw new Error("Unable to locate global `this`");
-  },
-
-  /**
    * Extends an object
    *
    * @param  {Object} target object to extend
@@ -257,63 +242,8 @@ export default {
   },
 
   /**
-   * Returns current timestamp as an integer
-   *
-   * @return {Number}
-   */
-  now:
-    Date.now ||
-    function () {
-      return new Date().getTime();
-    },
-
-  // From underscore.
-  // Returns a function, that, when invoked, will only be triggered at most once
-  // during a given window of time. Normally, the throttled function will run
-  // as much as it can, without ever going more than once per `wait` duration;
-  // but if you'd like to disable the execution on the leading edge, pass
-  // `{leading: false}`. To disable execution on the trailing edge, ditto.
-  throttle: function (func, wait, options) {
-    var that = this;
-    var context, args, result;
-    var timeout = null;
-    var previous = 0;
-    if (!options) {
-      options = {};
-    }
-    var later = function () {
-      previous = options.leading === false ? 0 : that.now();
-      timeout = null;
-      result = func.apply(context, args);
-      if (!timeout) {
-        context = args = null;
-      }
-    };
-    return function () {
-      var now = that.now();
-      if (!previous && options.leading === false) {
-        previous = now;
-      }
-      var remaining = wait - (now - previous);
-      context = this; // eslint-disable-line consistent-this
-      args = arguments;
-      if (remaining <= 0 || remaining > wait) {
-        clearTimeout(timeout);
-        timeout = null;
-        previous = now;
-        result = func.apply(context, args);
-        if (!timeout) {
-          context = args = null;
-        }
-      } else if (!timeout && options.trailing !== false) {
-        timeout = setTimeout(later, remaining);
-      }
-      return result;
-    };
-  },
-
-  /**
-   * Create a requestAnimationFrame simulation
+   * Create a requestAnimationFrame that runs at most refreshRate times a second.
+   * Call it with window as this.
    *
    * @param  {Number|String} refreshRate
    * @return {Function}
@@ -327,7 +257,7 @@ export default {
     }
 
     if (timeout === null) {
-      return window.requestAnimationFrame || requestTimeout(33);
+      return window.requestAnimationFrame;
     } else {
       return requestTimeout(timeout);
     }

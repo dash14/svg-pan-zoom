@@ -14,7 +14,7 @@ const options = {
   outfile: "dist/svg-pan-zoom.js",
   bundle: true,
   format: "esm",
-  target: "es5",
+  target: "es2015",
   banner: { js: banner },
   logLevel: "info",
 };

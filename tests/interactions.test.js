@@ -111,8 +111,36 @@ describe("mouse", () => {
     expectPointCloseTo(drawingPointAt(350, 150), pointed);
   });
 
+  // Measured in lines, the event skips the adjustment by wheelDelta.
+  test("scrolling sideways does not zoom", () => {
+    instance = svgPanZoom(svg);
+    const initialZoom = instance.getZoom();
+
+    svg.dispatchEvent(
+      new WheelEvent("wheel", {
+        deltaX: 3,
+        deltaMode: WheelEvent.DOM_DELTA_LINE,
+        clientX: 350,
+        clientY: 150,
+        cancelable: true,
+      })
+    );
+
+    expect(instance.getZoom()).toBe(initialZoom);
+  });
+
   test("wheeling does not zoom when mouse wheel zoom is disabled", async () => {
     instance = svgPanZoom(svg, { mouseWheelZoomEnabled: false });
+    const initialZoom = instance.getZoom();
+
+    await userEvent.wheel(svg, { delta: { y: -100 } });
+
+    expect(instance.getZoom()).toBe(initialZoom);
+  });
+
+  test("wheeling does not zoom after mouse wheel zoom is turned off", async () => {
+    instance = svgPanZoom(svg);
+    instance.disableMouseWheelZoom();
     const initialZoom = instance.getZoom();
 
     await userEvent.wheel(svg, { delta: { y: -100 } });

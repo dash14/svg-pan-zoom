@@ -494,11 +494,7 @@ Check [dynamic-load demo](demo/dynamic-load.html).
 
 Supported Browsers
 ------------------
-* Chrome
-* Firefox
-* Safari
-* Opera
-* Internet Explorer 9+ _(works badly if viewBox attribute is set)_
+Current versions of Chrome, Edge, Firefox and Safari.
 
 Related Work
 ------------
