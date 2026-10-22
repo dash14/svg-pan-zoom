@@ -195,7 +195,8 @@ var utilities_default = {
     return false;
   },
   /**
-   * Create a requestAnimationFrame simulation
+   * Create a requestAnimationFrame that runs at most refreshRate times a second.
+   * Call it with window as this.
    *
    * @param  {Number|String} refreshRate
    * @return {Function}
@@ -277,8 +278,8 @@ var svg_utilities_default = {
       var viewportId = "viewport-" + (/* @__PURE__ */ new Date()).toISOString().replace(/\D/g, "");
       viewport = document.createElementNS(this.svgNS, "g");
       viewport.setAttribute("id", viewportId);
-      var svgChildren = svg.childNodes || svg.children;
-      if (!!svgChildren && svgChildren.length > 0) {
+      var svgChildren = svg.childNodes;
+      if (svgChildren.length > 0) {
         for (var i = svgChildren.length; i > 0; i--) {
           if (svgChildren[svgChildren.length - i].nodeName !== "defs") {
             viewport.appendChild(svgChildren[svgChildren.length - i]);

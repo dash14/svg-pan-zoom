@@ -64,9 +64,8 @@ export default {
       viewport = document.createElementNS(this.svgNS, "g");
       viewport.setAttribute("id", viewportId);
 
-      // Internet Explorer (all versions?) can't use childNodes, but other browsers prefer (require?) using childNodes
-      var svgChildren = svg.childNodes || svg.children;
-      if (!!svgChildren && svgChildren.length > 0) {
+      var svgChildren = svg.childNodes;
+      if (svgChildren.length > 0) {
         for (var i = svgChildren.length; i > 0; i--) {
           // Move everything into viewport except defs
           if (svgChildren[svgChildren.length - i].nodeName !== "defs") {
@@ -103,7 +102,7 @@ export default {
     svg.setAttributeNS(this.xmlnsNS, "xmlns:xlink", this.xlinkNS);
     svg.setAttributeNS(this.xmlnsNS, "xmlns:ev", this.evNS);
 
-    // Needed for Internet Explorer, otherwise the viewport overflows
+    // Keep the zoomed viewport inside the SVG element
     if (svg.parentNode !== null) {
       var style = svg.getAttribute("style") || "";
       if (style.toLowerCase().indexOf("overflow") === -1) {

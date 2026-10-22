@@ -242,7 +242,8 @@ export default {
   },
 
   /**
-   * Create a requestAnimationFrame simulation
+   * Create a requestAnimationFrame that runs at most refreshRate times a second.
+   * Call it with window as this.
    *
    * @param  {Number|String} refreshRate
    * @return {Function}
