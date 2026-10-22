@@ -352,7 +352,7 @@ ShadowViewport.prototype.updateCTM = function () {
   var ctm = this.getCTM();
 
   // Updates SVG element
-  SvgUtils.setCTM(this.viewport, ctm, this.defs);
+  SvgUtils.setCTM(this.viewport, ctm);
 
   // Free the lock
   this.pendingUpdate = false;

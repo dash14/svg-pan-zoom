@@ -4,19 +4,6 @@
 // src/utilities.js
 var utilities_default = {
   /**
-   * Get global this object
-   *
-   * @return {Object}        global this object
-   */
-  getGlobalThis: function() {
-    if (typeof globalThis !== "undefined") return globalThis;
-    if (typeof self !== "undefined") return self;
-    if (typeof window !== "undefined") return window;
-    if (typeof global !== "undefined") return global;
-    if (typeof this !== "undefined") return this;
-    throw new Error("Unable to locate global `this`");
-  },
-  /**
    * Extends an object
    *
    * @param  {Object} target object to extend
@@ -208,58 +195,6 @@ var utilities_default = {
     return false;
   },
   /**
-   * Returns current timestamp as an integer
-   *
-   * @return {Number}
-   */
-  now: Date.now || function() {
-    return (/* @__PURE__ */ new Date()).getTime();
-  },
-  // From underscore.
-  // Returns a function, that, when invoked, will only be triggered at most once
-  // during a given window of time. Normally, the throttled function will run
-  // as much as it can, without ever going more than once per `wait` duration;
-  // but if you'd like to disable the execution on the leading edge, pass
-  // `{leading: false}`. To disable execution on the trailing edge, ditto.
-  throttle: function(func, wait, options) {
-    var that = this;
-    var context, args, result;
-    var timeout = null;
-    var previous = 0;
-    if (!options) {
-      options = {};
-    }
-    var later = function() {
-      previous = options.leading === false ? 0 : that.now();
-      timeout = null;
-      result = func.apply(context, args);
-      if (!timeout) {
-        context = args = null;
-      }
-    };
-    return function() {
-      var now = that.now();
-      if (!previous && options.leading === false) {
-        previous = now;
-      }
-      var remaining = wait - (now - previous);
-      context = this;
-      args = arguments;
-      if (remaining <= 0 || remaining > wait) {
-        clearTimeout(timeout);
-        timeout = null;
-        previous = now;
-        result = func.apply(context, args);
-        if (!timeout) {
-          context = args = null;
-        }
-      } else if (!timeout && options.trailing !== false) {
-        timeout = setTimeout(later, remaining);
-      }
-      return result;
-    };
-  },
-  /**
    * Create a requestAnimationFrame simulation
    *
    * @param  {Number|String} refreshRate
@@ -271,7 +206,7 @@ var utilities_default = {
       timeout = Math.floor(1e3 / refreshRate);
     }
     if (timeout === null) {
-      return window.requestAnimationFrame || requestTimeout(33);
+      return window.requestAnimationFrame;
     } else {
       return requestTimeout(timeout);
     }
@@ -295,130 +230,7 @@ function requestTimeout(timeout) {
   };
 }
 
-// src/uniwheel.js
-var uniwheel_default = (function() {
-  var prefix = "", _addEventListener, _removeEventListener, support, fns = [];
-  var passiveTrueOption = { passive: true };
-  var passiveFalseOption = { passive: false };
-  if (utilities_default.getGlobalThis().addEventListener) {
-    _addEventListener = "addEventListener";
-    _removeEventListener = "removeEventListener";
-  } else {
-    _addEventListener = "attachEvent";
-    _removeEventListener = "detachEvent";
-    prefix = "on";
-  }
-  function getSupport() {
-    if (!support) {
-      support = "onwheel" in document.createElement("div") ? "wheel" : document.onmousewheel !== void 0 ? "mousewheel" : "DOMMouseScroll";
-    }
-    return support;
-  }
-  function createCallback(element, callback) {
-    var fn = function(originalEvent) {
-      !originalEvent && (originalEvent = window.event);
-      var event = {
-        // keep a ref to the original event object
-        originalEvent: originalEvent,
-        target: originalEvent.target || originalEvent.srcElement,
-        type: "wheel",
-        deltaMode: originalEvent.type == "MozMousePixelScroll" ? 0 : 1,
-        deltaX: 0,
-        delatZ: 0,
-        preventDefault: function() {
-          originalEvent.preventDefault ? originalEvent.preventDefault() : originalEvent.returnValue = false;
-        }
-      };
-      if (getSupport() == "mousewheel") {
-        event.deltaY = -1 / 40 * originalEvent.wheelDelta;
-        originalEvent.wheelDeltaX && (event.deltaX = -1 / 40 * originalEvent.wheelDeltaX);
-      } else {
-        event.deltaY = originalEvent.detail;
-      }
-      return callback(event);
-    };
-    fns.push({
-      element: element,
-      fn: fn
-    });
-    return fn;
-  }
-  function getCallback(element) {
-    for (var i = 0; i < fns.length; i++) {
-      if (fns[i].element === element) {
-        return fns[i].fn;
-      }
-    }
-    return function() {
-    };
-  }
-  function removeCallback(element) {
-    for (var i = 0; i < fns.length; i++) {
-      if (fns[i].element === element) {
-        return fns.splice(i, 1);
-      }
-    }
-  }
-  function _addWheelListener(elem, eventName, callback, isPassiveListener) {
-    var cb;
-    if (getSupport() === "wheel") {
-      cb = callback;
-    } else {
-      cb = createCallback(elem, callback);
-    }
-    elem[_addEventListener](
-      prefix + eventName,
-      cb,
-      isPassiveListener ? passiveTrueOption : passiveFalseOption
-    );
-  }
-  function _removeWheelListener(elem, eventName, callback, isPassiveListener) {
-    var cb;
-    if (getSupport() === "wheel") {
-      cb = callback;
-    } else {
-      cb = getCallback(elem);
-    }
-    elem[_removeEventListener](
-      prefix + eventName,
-      cb,
-      isPassiveListener ? passiveTrueOption : passiveFalseOption
-    );
-    removeCallback(elem);
-  }
-  function addWheelListener(elem, callback, isPassiveListener) {
-    _addWheelListener(elem, getSupport(), callback, isPassiveListener);
-    if (getSupport() == "DOMMouseScroll") {
-      _addWheelListener(
-        elem,
-        "MozMousePixelScroll",
-        callback,
-        isPassiveListener
-      );
-    }
-  }
-  function removeWheelListener(elem, callback, isPassiveListener) {
-    _removeWheelListener(elem, getSupport(), callback, isPassiveListener);
-    if (getSupport() == "DOMMouseScroll") {
-      _removeWheelListener(
-        elem,
-        "MozMousePixelScroll",
-        callback,
-        isPassiveListener
-      );
-    }
-  }
-  return {
-    on: addWheelListener,
-    off: removeWheelListener
-  };
-})();
-
 // src/svg-utilities.js
-var _browser = "unknown";
-if (typeof document != "undefined" && !!document.documentMode) {
-  _browser = "ie";
-}
 var svg_utilities_default = {
   svgNS: "http://www.w3.org/2000/svg",
   xmlNS: "http://www.w3.org/XML/1998/namespace",
@@ -502,54 +314,15 @@ var svg_utilities_default = {
     }
   },
   /**
-   * How long Internet Explorer takes to finish updating its display (ms).
-   */
-  internetExplorerRedisplayInterval: 300,
-  /**
-   * Forces the browser to redisplay all SVG elements that rely on an
-   * element defined in a 'defs' section. It works globally, for every
-   * available defs element on the page.
-   * The throttling is intentionally global.
-   *
-   * This is only needed for IE. It is as a hack to make markers (and 'use' elements?)
-   * visible after pan/zoom when there are multiple SVGs on the page.
-   * See bug report: https://connect.microsoft.com/IE/feedback/details/781964/
-   * also see svg-pan-zoom issue: https://github.com/ariutta/svg-pan-zoom/issues/62
-   */
-  refreshDefsGlobal: utilities_default.throttle(
-    function() {
-      var allDefs = document.querySelectorAll("defs");
-      var allDefsCount = allDefs.length;
-      for (var i = 0; i < allDefsCount; i++) {
-        var thisDefs = allDefs[i];
-        thisDefs.parentNode.insertBefore(thisDefs, thisDefs);
-      }
-    },
-    void 0 ? (void 0).internetExplorerRedisplayInterval : null
-  ),
-  /**
    * Sets the current transform matrix of an element
    *
    * @param {SVGElement} element
    * @param {SVGMatrix} matrix  CTM
-   * @param {SVGElement} defs
    */
-  setCTM: function(element, matrix, defs) {
-    var that = this, s = "matrix(" + matrix.a + "," + matrix.b + "," + matrix.c + "," + matrix.d + "," + matrix.e + "," + matrix.f + ")";
+  setCTM: function(element, matrix) {
+    var s = "matrix(" + matrix.a + "," + matrix.b + "," + matrix.c + "," + matrix.d + "," + matrix.e + "," + matrix.f + ")";
     element.setAttributeNS(null, "transform", s);
-    if ("transform" in element.style) {
-      element.style.transform = s;
-    } else if ("-ms-transform" in element.style) {
-      element.style["-ms-transform"] = s;
-    } else if ("-webkit-transform" in element.style) {
-      element.style["-webkit-transform"] = s;
-    }
-    if (_browser === "ie" && !!defs) {
-      defs.parentNode.insertBefore(defs, defs);
-      window.setTimeout(function() {
-        that.refreshDefsGlobal();
-      }, that.internetExplorerRedisplayInterval);
-    }
+    element.style.transform = s;
   },
   /**
    * Instantiate an SVGPoint object with given event coordinates
@@ -953,7 +726,7 @@ ShadowViewport.prototype.updateCTMOnNextFrame = function() {
 };
 ShadowViewport.prototype.updateCTM = function() {
   var ctm = this.getCTM();
-  svg_utilities_default.setCTM(this.viewport, ctm, this.defs);
+  svg_utilities_default.setCTM(this.viewport, ctm);
   this.pendingUpdate = false;
   if (this.options.onUpdatedCTM) {
     this.options.onUpdatedCTM(ctm);
@@ -1009,7 +782,6 @@ var passiveListenerFalseOption = { passive: false };
 SvgPanZoom.prototype.init = function(svg, options) {
   var that = this;
   this.svg = svg;
-  this.defs = svg.querySelector("defs");
   svg_utilities_default.setupSvgAttributes(this.svg);
   this.options = utilities_default.extend(utilities_default.extend({}, optionsDefaults), options);
   this.state = "none";
@@ -1147,21 +919,19 @@ SvgPanZoom.prototype.enableMouseWheelZoom = function() {
       return that.handleMouseWheel(evt);
     };
     var isPassiveListener = !this.options.preventMouseEventsDefault;
-    uniwheel_default.on(
-      this.options.eventsListenerElement || this.svg,
+    (this.options.eventsListenerElement || this.svg).addEventListener(
+      "wheel",
       this.wheelListener,
-      isPassiveListener
+      { passive: isPassiveListener }
     );
     this.options.mouseWheelZoomEnabled = true;
   }
 };
 SvgPanZoom.prototype.disableMouseWheelZoom = function() {
   if (this.options.mouseWheelZoomEnabled) {
-    var isPassiveListener = !this.options.preventMouseEventsDefault;
-    uniwheel_default.off(
-      this.options.eventsListenerElement || this.svg,
-      this.wheelListener,
-      isPassiveListener
+    (this.options.eventsListenerElement || this.svg).removeEventListener(
+      "wheel",
+      this.wheelListener
     );
     this.options.mouseWheelZoomEnabled = false;
   }
@@ -1171,11 +941,7 @@ SvgPanZoom.prototype.handleMouseWheel = function(evt) {
     return;
   }
   if (this.options.preventMouseEventsDefault) {
-    if (evt.preventDefault) {
-      evt.preventDefault();
-    } else {
-      evt.returnValue = false;
-    }
+    evt.preventDefault();
   }
   var delta = evt.deltaY || 1, timeDelta = Date.now() - this.lastMouseWheelEventTime, divider = 3 + Math.max(0, 30 - timeDelta);
   this.lastMouseWheelEventTime = Date.now();
@@ -1256,11 +1022,7 @@ SvgPanZoom.prototype.reset = function() {
 };
 SvgPanZoom.prototype.handleDblClick = function(evt) {
   if (this.options.preventMouseEventsDefault) {
-    if (evt.preventDefault) {
-      evt.preventDefault();
-    } else {
-      evt.returnValue = false;
-    }
+    evt.preventDefault();
   }
   if (this.options.controlIconsEnabled) {
     var targetClass = evt.target.getAttribute("class") || "";
@@ -1281,11 +1043,7 @@ SvgPanZoom.prototype.handleDblClick = function(evt) {
 };
 SvgPanZoom.prototype.handleMouseDown = function(evt, prevEvt) {
   if (this.options.preventMouseEventsDefault) {
-    if (evt.preventDefault) {
-      evt.preventDefault();
-    } else {
-      evt.returnValue = false;
-    }
+    evt.preventDefault();
   }
   utilities_default.mouseAndTouchNormalize(evt, this.svg);
   if (this.options.dblClickZoomEnabled && utilities_default.isDblClick(evt, prevEvt)) {
@@ -1300,11 +1058,7 @@ SvgPanZoom.prototype.handleMouseDown = function(evt, prevEvt) {
 };
 SvgPanZoom.prototype.handleMouseMove = function(evt) {
   if (this.options.preventMouseEventsDefault) {
-    if (evt.preventDefault) {
-      evt.preventDefault();
-    } else {
-      evt.returnValue = false;
-    }
+    evt.preventDefault();
   }
   if (this.state === "pan" && this.options.panEnabled) {
     var point = svg_utilities_default.getEventPoint(evt, this.svg).matrixTransform(
@@ -1318,11 +1072,7 @@ SvgPanZoom.prototype.handleMouseMove = function(evt) {
 };
 SvgPanZoom.prototype.handleMouseUp = function(evt) {
   if (this.options.preventMouseEventsDefault) {
-    if (evt.preventDefault) {
-      evt.preventDefault();
-    } else {
-      evt.returnValue = false;
-    }
+    evt.preventDefault();
   }
   if (this.state === "pan") {
     this.state = "none";
@@ -1333,11 +1083,7 @@ SvgPanZoom.prototype.handleTouchStart = function(evt, prevEvt) {
     this.handleMouseDown(evt, prevEvt);
   } else {
     if (this.options.preventMouseEventsDefault) {
-      if (evt.preventDefault) {
-        evt.preventDefault();
-      } else {
-        evt.returnValue = false;
-      }
+      evt.preventDefault();
     }
     this.firstEventCTM = this.viewport.getCTM();
     var touch1 = svg_utilities_default.getTouchPoint(evt, this.svg, 0);
@@ -1354,11 +1100,7 @@ SvgPanZoom.prototype.handleTouchMove = function(evt) {
     this.handleMouseMove(evt);
   } else {
     if (this.options.preventMouseEventsDefault) {
-      if (evt.preventDefault) {
-        evt.preventDefault();
-      } else {
-        evt.returnValue = false;
-      }
+      evt.preventDefault();
     }
     if (!this.options.panEnabled && !this.options.zoomEnabled) {
       return;
@@ -1390,11 +1132,7 @@ SvgPanZoom.prototype.handleTouchEnd = function(evt) {
     this.handleMouseUp(evt);
   } else {
     if (this.options.preventMouseEventsDefault) {
-      if (evt.preventDefault) {
-        evt.preventDefault();
-      } else {
-        evt.returnValue = false;
-      }
+      evt.preventDefault();
     }
     this.firstEventCTM = this.viewport.getCTM();
     if (evt.touches.length == 1) {
@@ -1705,7 +1443,7 @@ var svgPanZoom = function(elementOrSelector, options) {
       }
     }
     instancesStore.push({
-      svg: svg,
+      svg,
       instance: new SvgPanZoom(svg, options)
     });
     return instancesStore[instancesStore.length - 1].instance.getPublicInstance();

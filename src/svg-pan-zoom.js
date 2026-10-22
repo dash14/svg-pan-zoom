@@ -1,4 +1,3 @@
-import Wheel from "./uniwheel.js";
 import ControlIcons from "./control-icons.js";
 import Utils from "./utilities.js";
 import SvgUtils from "./svg-utilities.js";
@@ -39,7 +38,6 @@ SvgPanZoom.prototype.init = function (svg, options) {
   var that = this;
 
   this.svg = svg;
-  this.defs = svg.querySelector("defs");
 
   // Add default attributes to SVG
   SvgUtils.setupSvgAttributes(this.svg);
@@ -223,10 +221,10 @@ SvgPanZoom.prototype.enableMouseWheelZoom = function () {
 
     // Bind wheelListener
     var isPassiveListener = !this.options.preventMouseEventsDefault;
-    Wheel.on(
-      this.options.eventsListenerElement || this.svg,
+    (this.options.eventsListenerElement || this.svg).addEventListener(
+      "wheel",
       this.wheelListener,
-      isPassiveListener
+      { passive: isPassiveListener }
     );
 
     this.options.mouseWheelZoomEnabled = true;
@@ -238,11 +236,9 @@ SvgPanZoom.prototype.enableMouseWheelZoom = function () {
  */
 SvgPanZoom.prototype.disableMouseWheelZoom = function () {
   if (this.options.mouseWheelZoomEnabled) {
-    var isPassiveListener = !this.options.preventMouseEventsDefault;
-    Wheel.off(
-      this.options.eventsListenerElement || this.svg,
-      this.wheelListener,
-      isPassiveListener
+    (this.options.eventsListenerElement || this.svg).removeEventListener(
+      "wheel",
+      this.wheelListener
     );
     this.options.mouseWheelZoomEnabled = false;
   }
@@ -259,11 +255,7 @@ SvgPanZoom.prototype.handleMouseWheel = function (evt) {
   }
 
   if (this.options.preventMouseEventsDefault) {
-    if (evt.preventDefault) {
-      evt.preventDefault();
-    } else {
-      evt.returnValue = false;
-    }
+    evt.preventDefault();
   }
 
   // Default delta in case that deltaY is not available
@@ -454,11 +446,7 @@ SvgPanZoom.prototype.reset = function () {
  */
 SvgPanZoom.prototype.handleDblClick = function (evt) {
   if (this.options.preventMouseEventsDefault) {
-    if (evt.preventDefault) {
-      evt.preventDefault();
-    } else {
-      evt.returnValue = false;
-    }
+    evt.preventDefault();
   }
 
   // Check if target was a control button
@@ -490,11 +478,7 @@ SvgPanZoom.prototype.handleDblClick = function (evt) {
  */
 SvgPanZoom.prototype.handleMouseDown = function (evt, prevEvt) {
   if (this.options.preventMouseEventsDefault) {
-    if (evt.preventDefault) {
-      evt.preventDefault();
-    } else {
-      evt.returnValue = false;
-    }
+    evt.preventDefault();
   }
 
   Utils.mouseAndTouchNormalize(evt, this.svg);
@@ -519,11 +503,7 @@ SvgPanZoom.prototype.handleMouseDown = function (evt, prevEvt) {
  */
 SvgPanZoom.prototype.handleMouseMove = function (evt) {
   if (this.options.preventMouseEventsDefault) {
-    if (evt.preventDefault) {
-      evt.preventDefault();
-    } else {
-      evt.returnValue = false;
-    }
+    evt.preventDefault();
   }
 
   if (this.state === "pan" && this.options.panEnabled) {
@@ -547,11 +527,7 @@ SvgPanZoom.prototype.handleMouseMove = function (evt) {
  */
 SvgPanZoom.prototype.handleMouseUp = function (evt) {
   if (this.options.preventMouseEventsDefault) {
-    if (evt.preventDefault) {
-      evt.preventDefault();
-    } else {
-      evt.returnValue = false;
-    }
+    evt.preventDefault();
   }
 
   if (this.state === "pan") {
@@ -570,11 +546,7 @@ SvgPanZoom.prototype.handleTouchStart = function (evt, prevEvt) {
     this.handleMouseDown(evt, prevEvt);
   } else {
     if (this.options.preventMouseEventsDefault) {
-      if (evt.preventDefault) {
-        evt.preventDefault();
-      } else {
-        evt.returnValue = false;
-      }
+      evt.preventDefault();
     }
 
     this.firstEventCTM = this.viewport.getCTM();
@@ -599,11 +571,7 @@ SvgPanZoom.prototype.handleTouchMove = function (evt) {
   } else {
     // pan and zoom
     if (this.options.preventMouseEventsDefault) {
-      if (evt.preventDefault) {
-        evt.preventDefault();
-      } else {
-        evt.returnValue = false;
-      }
+      evt.preventDefault();
     }
     if (!this.options.panEnabled && !this.options.zoomEnabled) {
       return;
@@ -646,11 +614,7 @@ SvgPanZoom.prototype.handleTouchEnd = function (evt) {
     this.handleMouseUp(evt);
   } else {
     if (this.options.preventMouseEventsDefault) {
-      if (evt.preventDefault) {
-        evt.preventDefault();
-      } else {
-        evt.returnValue = false;
-      }
+      evt.preventDefault();
     }
 
     this.firstEventCTM = this.viewport.getCTM();
