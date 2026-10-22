@@ -1,6 +1,6 @@
 {
   "name": "@dash14/svg-pan-zoom",
-  "version": "3.6.10",
+  "version": "4.0.0",
   "type": "module",
   "exports": {
     ".": {
