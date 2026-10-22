@@ -267,7 +267,7 @@ var svg_utilities_default = {
       viewport = svg.querySelector(selector);
     }
     if (!viewport) {
-      var childNodes = Array.prototype.slice.call(svg.childNodes || svg.children).filter(function(el) {
+      var childNodes = Array.prototype.slice.call(svg.childNodes).filter(function(el) {
         return el.nodeName !== "defs" && el.nodeName !== "#text";
       });
       if (childNodes.length === 1 && childNodes[0].nodeName === "g" && childNodes[0].getAttribute("transform") === null) {
@@ -279,11 +279,9 @@ var svg_utilities_default = {
       viewport = document.createElementNS(this.svgNS, "g");
       viewport.setAttribute("id", viewportId);
       var svgChildren = svg.childNodes;
-      if (svgChildren.length > 0) {
-        for (var i = svgChildren.length; i > 0; i--) {
-          if (svgChildren[svgChildren.length - i].nodeName !== "defs") {
-            viewport.appendChild(svgChildren[svgChildren.length - i]);
-          }
+      for (var i = svgChildren.length; i > 0; i--) {
+        if (svgChildren[svgChildren.length - i].nodeName !== "defs") {
+          viewport.appendChild(svgChildren[svgChildren.length - i]);
         }
       }
       svg.appendChild(viewport);
@@ -944,7 +942,7 @@ SvgPanZoom.prototype.handleMouseWheel = function(evt) {
   if (this.options.preventMouseEventsDefault) {
     evt.preventDefault();
   }
-  var delta = evt.deltaY, timeDelta = Date.now() - this.lastMouseWheelEventTime, divider = 3 + Math.max(0, 30 - timeDelta);
+  var delta = evt.deltaY || 0, timeDelta = Date.now() - this.lastMouseWheelEventTime, divider = 3 + Math.max(0, 30 - timeDelta);
   this.lastMouseWheelEventTime = Date.now();
   if (evt.deltaMode === 0 && evt.wheelDelta) {
     delta = evt.deltaY === 0 ? 0 : Math.abs(evt.wheelDelta) / evt.deltaY;
