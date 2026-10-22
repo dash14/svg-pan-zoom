@@ -258,8 +258,7 @@ SvgPanZoom.prototype.handleMouseWheel = function (evt) {
     evt.preventDefault();
   }
 
-  // Default delta in case that deltaY is not available
-  var delta = evt.deltaY || 1,
+  var delta = evt.deltaY,
     timeDelta = Date.now() - this.lastMouseWheelEventTime,
     divider = 3 + Math.max(0, 30 - timeDelta);
 
@@ -267,7 +266,7 @@ SvgPanZoom.prototype.handleMouseWheel = function (evt) {
   this.lastMouseWheelEventTime = Date.now();
 
   // Make empirical adjustments for browsers that give deltaY in pixels (deltaMode=0)
-  if ("deltaMode" in evt && evt.deltaMode === 0 && evt.wheelDelta) {
+  if (evt.deltaMode === 0 && evt.wheelDelta) {
     delta = evt.deltaY === 0 ? 0 : Math.abs(evt.wheelDelta) / evt.deltaY;
   }
 

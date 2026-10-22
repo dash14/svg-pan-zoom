@@ -944,9 +944,9 @@ SvgPanZoom.prototype.handleMouseWheel = function(evt) {
   if (this.options.preventMouseEventsDefault) {
     evt.preventDefault();
   }
-  var delta = evt.deltaY || 1, timeDelta = Date.now() - this.lastMouseWheelEventTime, divider = 3 + Math.max(0, 30 - timeDelta);
+  var delta = evt.deltaY, timeDelta = Date.now() - this.lastMouseWheelEventTime, divider = 3 + Math.max(0, 30 - timeDelta);
   this.lastMouseWheelEventTime = Date.now();
-  if ("deltaMode" in evt && evt.deltaMode === 0 && evt.wheelDelta) {
+  if (evt.deltaMode === 0 && evt.wheelDelta) {
     delta = evt.deltaY === 0 ? 0 : Math.abs(evt.wheelDelta) / evt.deltaY;
   }
   delta = -0.3 < delta && delta < 0.3 ? delta : (delta > 0 ? 1 : -1) * Math.log(Math.abs(delta) + 10) / divider;
