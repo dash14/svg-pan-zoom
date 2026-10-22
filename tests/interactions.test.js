@@ -120,6 +120,16 @@ describe("mouse", () => {
     expect(instance.getZoom()).toBe(initialZoom);
   });
 
+  test("wheeling does not zoom after mouse wheel zoom is turned off", async () => {
+    instance = svgPanZoom(svg);
+    instance.disableMouseWheelZoom();
+    const initialZoom = instance.getZoom();
+
+    await userEvent.wheel(svg, { delta: { y: -100 } });
+
+    expect(instance.getZoom()).toBe(initialZoom);
+  });
+
   test("wheeling does not zoom when zoom is disabled", async () => {
     instance = svgPanZoom(svg, { zoomEnabled: false });
     const initialZoom = instance.getZoom();
