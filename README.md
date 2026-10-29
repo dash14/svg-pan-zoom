@@ -218,6 +218,8 @@ svgPanZoom('#demo-tiger', {
 });
 ```
 
+A viewport that `viewportSelector` finds keeps its class attribute as it is. A viewport that svg-pan-zoom picks or creates gets the `svg-pan-zoom_viewport` class, so that a new instance on the same SVG finds it again with the default selector.
+
 Listening for pan/zoom events on a child SVG element
 ----------------------------------------------------
 

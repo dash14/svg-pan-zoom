@@ -507,3 +507,33 @@ describe("destroy", () => {
     expect(instance).not.toBe(destroyed);
   });
 });
+
+describe("viewport", () => {
+  const groups = () => document.querySelectorAll(`${svgSelector} g`);
+
+  test("the only top-level group becomes the viewport and gets the default class", () => {
+    instance = initSvgPanZoom();
+
+    expect(groups()).toHaveLength(1);
+    expect(groups()[0].classList.contains("svg-pan-zoom_viewport")).toBe(true);
+  });
+
+  test("reinitializing finds the same viewport by the default class", () => {
+    initSvgPanZoom().destroy();
+    instance = initSvgPanZoom();
+
+    expect(groups()).toHaveLength(1);
+  });
+
+  test("a viewport given by viewportSelector keeps its class", () => {
+    const viewport = groups()[0];
+    viewport.setAttribute("class", "custom");
+
+    instance = initSvgPanZoom({ viewportSelector: ".custom" });
+    expect(viewport.getAttribute("class")).toBe("custom");
+
+    instance.destroy();
+    instance = initSvgPanZoom({ viewportSelector: viewport });
+    expect(viewport.getAttribute("class")).toBe("custom");
+  });
+});

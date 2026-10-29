@@ -24,7 +24,9 @@ export default {
   },
 
   /**
-   * Gets g element with class of "viewport" or creates it if it doesn't exist
+   * Gets the g element that the selector points to, or else the only top-level g element, or else
+   * creates one. Only the last two get the "svg-pan-zoom_viewport" class, which marks them for the
+   * default selector.
    *
    * @param  {SVGSVGElement} svg
    * @return {SVGElement}     g (group) element
@@ -38,23 +40,25 @@ export default {
       viewport = svg.querySelector(selector);
     }
 
-    // Check if there is just one main group in SVG
-    if (!viewport) {
-      var childNodes = Array.prototype.slice
-        .call(svg.childNodes)
-        .filter(function (el) {
-          return el.nodeName !== "defs" && el.nodeName !== "#text";
-        });
+    if (viewport) {
+      return viewport;
+    }
 
-      // Node name should be SVGGElement and should have no transform attribute
-      // Groups with transform are not used as viewport because it involves parsing of all transform possibilities
-      if (
-        childNodes.length === 1 &&
-        childNodes[0].nodeName === "g" &&
-        childNodes[0].getAttribute("transform") === null
-      ) {
-        viewport = childNodes[0];
-      }
+    // Check if there is just one main group in SVG
+    var childNodes = Array.prototype.slice
+      .call(svg.childNodes)
+      .filter(function (el) {
+        return el.nodeName !== "defs" && el.nodeName !== "#text";
+      });
+
+    // Node name should be SVGGElement and should have no transform attribute
+    // Groups with transform are not used as viewport because it involves parsing of all transform possibilities
+    if (
+      childNodes.length === 1 &&
+      childNodes[0].nodeName === "g" &&
+      childNodes[0].getAttribute("transform") === null
+    ) {
+      viewport = childNodes[0];
     }
 
     // If no favorable group element exists then create one
