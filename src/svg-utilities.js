@@ -24,7 +24,7 @@ export default {
   },
 
   /**
-   * Gets the g element that the selector points to, or else the only top-level g element, or else
+   * Gets the element that the selector finds, or else the only top-level g element, or else
    * creates one. Only the last two get the "svg-pan-zoom_viewport" class, which marks them for the
    * default selector.
    *
