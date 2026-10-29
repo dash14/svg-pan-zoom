@@ -254,7 +254,9 @@ var svg_utilities_default = {
     }
   },
   /**
-   * Gets g element with class of "viewport" or creates it if it doesn't exist
+   * Gets the element that the selector finds, or else the only top-level g element, or else
+   * creates one. Only the last two get the "svg-pan-zoom_viewport" class, which marks them for the
+   * default selector.
    *
    * @param  {SVGSVGElement} svg
    * @return {SVGElement}     g (group) element
@@ -266,13 +268,14 @@ var svg_utilities_default = {
     } else {
       viewport = svg.querySelector(selector);
     }
-    if (!viewport) {
-      var childNodes = Array.prototype.slice.call(svg.childNodes).filter(function(el) {
-        return el.nodeName !== "defs" && el.nodeName !== "#text";
-      });
-      if (childNodes.length === 1 && childNodes[0].nodeName === "g" && childNodes[0].getAttribute("transform") === null) {
-        viewport = childNodes[0];
-      }
+    if (viewport) {
+      return viewport;
+    }
+    var childNodes = Array.prototype.slice.call(svg.childNodes).filter(function(el) {
+      return el.nodeName !== "defs" && el.nodeName !== "#text";
+    });
+    if (childNodes.length === 1 && childNodes[0].nodeName === "g" && childNodes[0].getAttribute("transform") === null) {
+      viewport = childNodes[0];
     }
     if (!viewport) {
       var viewportId = "viewport-" + (/* @__PURE__ */ new Date()).toISOString().replace(/\D/g, "");
