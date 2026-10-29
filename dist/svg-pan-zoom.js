@@ -1,4 +1,4 @@
-// svg-pan-zoom v4.0.1
+// svg-pan-zoom v4.1.0
 // https://github.com/dash14/svg-pan-zoom
 
 // src/utilities.js
