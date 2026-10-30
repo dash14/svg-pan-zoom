@@ -25,8 +25,8 @@ These settings live outside the repository and are what the workflow relies on:
    as a tag, for example `v1.2.3` or `v1.2.3-beta.1`.
 3. The workflow checks the tag, then rebuilds `dist/`, checks that it matches the committed files,
    and tests the package. Approve the deployment to the `release` environment if it asks.
-4. The workflow creates a draft GitHub Release with generated notes and the package tarball
-   attached, then stages the same tarball on npm.
+4. The workflow creates a draft GitHub Release with generated notes, then stages the package on
+   npm.
 5. Approve the staged version within 30 minutes, either on npmjs.com or with
    `npm stage list @dash14/svg-pan-zoom` and `npm stage approve <stage-id>`.
 6. Once the version is on npm, the workflow publishes the release, which creates the tag.
